@@ -10,13 +10,13 @@ noblacklist ${HOME}/.config/digikam
 noblacklist ${HOME}/.config/digikamrc
 noblacklist ${HOME}/.kde/share/apps/digikam
 noblacklist ${HOME}/.kde4/share/apps/digikam
+noblacklist ${HOME}/.local/share/kxmlgui5/digikam
 noblacklist ${PICTURES}
 
 include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 

@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -28,6 +27,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -43,7 +43,7 @@ tracelog
 private-bin xournal
 private-cache
 private-dev
-private-etc alternatives,fonts,group,machine-id,passwd
+private-etc alternatives,fonts,group,ld.so.preload,machine-id,passwd
 # TODO should use private-lib
 private-tmp
 

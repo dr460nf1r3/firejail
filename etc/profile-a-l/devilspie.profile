@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -32,6 +31,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -48,7 +48,7 @@ disable-mnt
 private-bin devilspie
 private-cache
 private-dev
-private-etc alternatives
+private-etc alternatives,ld.so.preload
 private-lib gconv
 private-tmp
 

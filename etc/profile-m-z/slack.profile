@@ -18,13 +18,15 @@ ignore dbus-system none
 
 noblacklist ${HOME}/.config/Slack
 
+include allow-bin-sh.inc
+
 include disable-shell.inc
 
 mkdir ${HOME}/.config/Slack
 whitelist ${HOME}/.config/Slack
 
-private-bin locale,slack
-private-etc alternatives,asound.conf,ca-certificates,crypto-policies,debian_version,fedora-release,fonts,group,ld.so.cache,ld.so.conf,localtime,machine-id,os-release,passwd,pki,pulse,redhat-release,resolv.conf,ssl,system-release,system-release-cpe
+private-bin electron,electron[0-9],electron[0-9][0-9],locale,sh,slack
+private-etc alternatives,asound.conf,ca-certificates,crypto-policies,debian_version,fedora-release,fonts,group,ld.so.cache,ld.so.conf,ld.so.preload,localtime,machine-id,os-release,passwd,pki,pulse,redhat-release,resolv.conf,ssl,system-release,system-release-cpe
 
 # Redirect
 include electron.profile

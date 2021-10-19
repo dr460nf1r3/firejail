@@ -10,7 +10,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -26,6 +25,7 @@ caps.drop all
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -42,7 +42,7 @@ private
 private-bin gnome-hexgl
 private-cache
 private-dev
-private-etc alsa,asound.conf,machine-id,pulse
+private-etc alsa,asound.conf,ld.so.preload,machine-id,pulse
 private-tmp
 
 dbus-user none

@@ -9,6 +9,10 @@ noblacklist ${HOME}/.local/share/multimc
 noblacklist ${HOME}/.local/share/multimc5
 noblacklist ${HOME}/.multimc5
 
+# Ignore noexec on ${HOME} as MultiMC installs LWJGL native
+# libraries in ${HOME}/.local/share/multimc
+ignore noexec ${HOME}
+
 # Allow java (blacklisted by disable-devel.inc)
 include allow-java.inc
 
@@ -16,7 +20,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/.local/share/multimc
@@ -31,6 +34,7 @@ caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv

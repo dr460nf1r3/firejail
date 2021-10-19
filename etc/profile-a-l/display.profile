@@ -15,7 +15,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -27,6 +26,7 @@ caps.drop all
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -40,7 +40,7 @@ shell none
 private-bin display,python*
 private-dev
 # On Debian-based systems, display is a symlink in /etc/alternatives
-private-etc alternatives
+private-etc alternatives,ld.so.preload
 private-tmp
 
 dbus-user none

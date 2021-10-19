@@ -15,7 +15,6 @@ noblacklist ${MUSIC}
 include disable-common.inc
 include disable-devel.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -26,6 +25,7 @@ caps.keep chown,dac_override,ipc_lock,net_bind_service,sys_admin,sys_nice,sys_ra
 netfilter
 no3d
 # nonewprivs - breaks privileged helpers
+noinput
 # noroot - breaks privileged helpers
 nosound
 notv

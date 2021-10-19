@@ -14,7 +14,6 @@ noblacklist ${HOME}/.lesshst
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 
 apparmor
 caps.drop all
@@ -23,6 +22,7 @@ machine-id
 net none
 no3d
 nodvd
+noinput
 nonewprivs
 #noroot
 nosound

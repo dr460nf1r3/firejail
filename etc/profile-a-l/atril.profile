@@ -17,7 +17,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -29,6 +28,7 @@ machine-id
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -42,7 +42,7 @@ tracelog
 
 private-bin 7z,7za,7zr,atril,atril-previewer,atril-thumbnailer,sh,tar,unrar,unzip,zipnote
 private-dev
-private-etc alternatives,fonts,ld.so.cache
+private-etc alternatives,fonts,ld.so.cache,ld.so.preload
 # atril uses webkit gtk to display epub files
 # waiting for globbing support in private-lib; for now hardcoding it to webkit2gtk-4.0
 #private-lib webkit2gtk-4.0 - problems on Arch with the new version of WebKit

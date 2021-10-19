@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -26,6 +25,7 @@ caps.drop all
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -39,7 +39,7 @@ tracelog
 
 private-bin xreader,xreader-previewer,xreader-thumbnailer
 private-dev
-private-etc alternatives,fonts,ld.so.cache
+private-etc alternatives,fonts,ld.so.cache,ld.so.preload
 private-tmp
 
 memory-deny-write-execute

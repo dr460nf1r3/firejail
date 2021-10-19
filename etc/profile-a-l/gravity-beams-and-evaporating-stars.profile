@@ -10,7 +10,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -25,6 +24,7 @@ caps.drop all
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -40,7 +40,7 @@ private
 private-bin gravity-beams-and-evaporating-stars
 private-cache
 private-dev
-private-etc fonts,machine-id
+private-etc fonts,ld.so.preload,machine-id
 private-tmp
 
 dbus-user none

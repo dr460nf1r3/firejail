@@ -15,7 +15,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -32,6 +31,7 @@ caps.drop all
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 notv
 nou2f
@@ -45,7 +45,7 @@ disable-mnt
 private-bin magicor,python2*
 private-cache
 private-dev
-private-etc machine-id
+private-etc ld.so.preload,machine-id
 private-tmp
 
 dbus-user none

@@ -24,6 +24,7 @@ netfilter
 nodvd
 # required for sudo-free docker
 #nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -35,7 +36,7 @@ tracelog
 
 disable-mnt
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,hosts,ld.so.cache,localtime,nsswitch.conf,pki,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,hosts,ld.so.cache,ld.so.preload,localtime,nsswitch.conf,pki,resolv.conf,ssl
 private-tmp
 
 dbus-user none

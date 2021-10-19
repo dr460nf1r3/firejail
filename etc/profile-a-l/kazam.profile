@@ -21,7 +21,6 @@ include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
 include disable-programs.inc
-include disable-passwdmgr.inc
 include disable-shell.inc
 include disable-xdg.inc
 
@@ -35,6 +34,7 @@ caps.drop all
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -49,7 +49,7 @@ disable-mnt
 # private-bin kazam,python*
 private-cache
 private-dev
-private-etc alsa,alternatives,asound.conf,dconf,fonts,gtk-2.0,gtk-3.0,machine-id,pulse,selinux,X11,xdg
+private-etc alsa,alternatives,asound.conf,dconf,fonts,gtk-2.0,gtk-3.0,ld.so.preload,machine-id,pulse,selinux,X11,xdg
 private-tmp
 
 dbus-system none

@@ -35,6 +35,8 @@ char *xvfb_extra_params = "";
 char *netfilter_default = NULL;
 unsigned long join_timeout = 5000000; // microseconds
 char *config_seccomp_error_action_str = "EPERM";
+char *config_seccomp_filter_add = NULL;
+char **whitelist_reject_topdirs = NULL;
 
 int checkcfg(int val) {
 	assert(val < CFG_MAX);
@@ -56,10 +58,11 @@ int checkcfg(int val) {
 		cfg_val[CFG_XPRA_ATTACH] = 0;
 		cfg_val[CFG_SECCOMP_ERROR_ACTION] = -1;
 		cfg_val[CFG_BROWSER_ALLOW_DRM] = 0;
+		cfg_val[CFG_ALLOW_TRAY] = 0;
 
 		// open configuration file
 		const char *fname = SYSCONFDIR "/firejail.config";
-		fp = fopen(fname, "r");
+		fp = fopen(fname, "re");
 		if (!fp) {
 #ifdef HAVE_GLOBALCFG
 			fprintf(stderr, "Error: Firejail configuration file %s not found\n", fname);
@@ -102,22 +105,25 @@ int checkcfg(int val) {
 			PARSE_YESNO(CFG_USERNS, "userns")
 			PARSE_YESNO(CFG_CHROOT, "chroot")
 			PARSE_YESNO(CFG_FIREJAIL_PROMPT, "firejail-prompt")
-			PARSE_YESNO(CFG_FOLLOW_SYMLINK_AS_USER, "follow-symlink-as-user")
 			PARSE_YESNO(CFG_FORCE_NONEWPRIVS, "force-nonewprivs")
 			PARSE_YESNO(CFG_SECCOMP, "seccomp")
-			PARSE_YESNO(CFG_WHITELIST, "whitelist")
 			PARSE_YESNO(CFG_NETWORK, "network")
 			PARSE_YESNO(CFG_RESTRICTED_NETWORK, "restricted-network")
 			PARSE_YESNO(CFG_XEPHYR_WINDOW_TITLE, "xephyr-window-title")
 			PARSE_YESNO(CFG_OVERLAYFS, "overlayfs")
-			PARSE_YESNO(CFG_PRIVATE_HOME, "private-home")
-			PARSE_YESNO(CFG_PRIVATE_CACHE, "private-cache")
-			PARSE_YESNO(CFG_PRIVATE_LIB, "private-lib")
+			PARSE_YESNO(CFG_PRIVATE_BIN, "private-bin")
 			PARSE_YESNO(CFG_PRIVATE_BIN_NO_LOCAL, "private-bin-no-local")
+			PARSE_YESNO(CFG_PRIVATE_CACHE, "private-cache")
+			PARSE_YESNO(CFG_PRIVATE_ETC, "private-etc")
+			PARSE_YESNO(CFG_PRIVATE_HOME, "private-home")
+			PARSE_YESNO(CFG_PRIVATE_LIB, "private-lib")
+			PARSE_YESNO(CFG_PRIVATE_OPT, "private-opt")
+			PARSE_YESNO(CFG_PRIVATE_SRV, "private-srv")
 			PARSE_YESNO(CFG_DISABLE_MNT, "disable-mnt")
 			PARSE_YESNO(CFG_XPRA_ATTACH, "xpra-attach")
 			PARSE_YESNO(CFG_BROWSER_DISABLE_U2F, "browser-disable-u2f")
 			PARSE_YESNO(CFG_BROWSER_ALLOW_DRM, "browser-allow-drm")
+			PARSE_YESNO(CFG_ALLOW_TRAY, "allow-tray")
 #undef PARSE_YESNO
 
 			// netfilter
@@ -130,8 +136,7 @@ int checkcfg(int val) {
 					*end = '\0';
 
 				// is the file present?
-				struct stat s;
-				if (stat(fname, &s) == -1) {
+				if (access(fname, F_OK) == -1) {
 					fprintf(stderr, "Error: netfilter-default file %s not available\n", fname);
 					exit(1);
 				}
@@ -222,6 +227,10 @@ int checkcfg(int val) {
 			else if (strncmp(ptr, "join-timeout ", 13) == 0)
 				join_timeout = strtoul(ptr + 13, NULL, 10) * 1000000; // seconds to microseconds
 
+			// add rules to default seccomp filter
+			else if (strncmp(ptr, "seccomp-filter-add ", 19) == 0)
+				config_seccomp_filter_add = seccomp_check_list(ptr + 19);
+
 			// seccomp error action
 			else if (strncmp(ptr, "seccomp-error-action ", 21) == 0) {
 				if (strcmp(ptr + 21, "kill") == 0)
@@ -236,6 +245,31 @@ int checkcfg(int val) {
 				config_seccomp_error_action_str = strdup(ptr + 21);
 				if (!config_seccomp_error_action_str)
 					errExit("strdup");
+			}
+
+			else if (strncmp(ptr, "whitelist-disable-topdir ", 25) == 0) {
+				char *str = strdup(ptr + 25);
+				if (!str)
+					errExit("strdup");
+
+				size_t cnt = 0;
+				size_t sz = 4;
+				whitelist_reject_topdirs = malloc(sz * sizeof(char *));
+				if (!whitelist_reject_topdirs)
+					errExit("malloc");
+
+				char *tok = strtok(str, ",");
+				while (tok) {
+					whitelist_reject_topdirs[cnt++] = tok;
+					if (cnt >= sz) {
+						sz *= 2;
+						whitelist_reject_topdirs = realloc(whitelist_reject_topdirs, sz * sizeof(char *));
+						if (!whitelist_reject_topdirs)
+							errExit("realloc");
+					}
+					tok = strtok(NULL, ",");
+				}
+				whitelist_reject_topdirs[cnt] = NULL;
 			}
 
 			else
@@ -269,7 +303,7 @@ errout:
 
 void print_compiletime_support(void) {
 	printf("Compile time support:\n");
-	printf("\t- Always force nonewprivs support is %s\n",
+	printf("\t- always force nonewprivs support is %s\n",
 #ifdef HAVE_FORCE_NONEWPRIVS
 		"enabled"
 #else
@@ -303,14 +337,6 @@ void print_compiletime_support(void) {
 
 	printf("\t- D-BUS proxy support is %s\n",
 #ifdef HAVE_DBUSPROXY
-		"enabled"
-#else
-		"disabled"
-#endif
-		);
-
-	printf("\t- file and directory whitelisting support is %s\n",
-#ifdef HAVE_WHITELIST
 		"enabled"
 #else
 		"disabled"

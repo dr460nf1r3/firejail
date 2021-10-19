@@ -24,7 +24,7 @@ Exit-Codes:
 
 # Requirements:
 #  python >= 3.6
-from sys import argv
+from sys import argv, exit as sys_exit
 
 
 def sort_alphabetical(raw_items):
@@ -34,44 +34,17 @@ def sort_alphabetical(raw_items):
 
 
 def sort_protocol(protocols):
-    """sort the given protocole into this scheme: unix,inet,inet6,netlink,packet,bluetooth"""
+    """sort the given protocols into this scheme: unix,inet,inet6,netlink,packet,bluetooth"""
+
     # shortcut for common protocol lines
     if protocols in ("unix", "unix,inet,inet6"):
         return protocols
+
     fixed_protocols = ""
-    present_protocols = {
-        "unix": False,
-        "inet": False,
-        "inet6": False,
-        "netlink": False,
-        "packet": False,
-        "bluetooth": False,
-    }
-    for protocol in protocols.split(","):
-        if protocol == "unix":
-            present_protocols["unix"] = True
-        elif protocol == "inet":
-            present_protocols["inet"] = True
-        elif protocol == "inet6":
-            present_protocols["inet6"] = True
-        elif protocol == "netlink":
-            present_protocols["netlink"] = True
-        elif protocol == "packet":
-            present_protocols["packet"] = True
-        elif protocol == "bluetooth":
-            present_protocols["bluetooth"] = True
-    if present_protocols["unix"]:
-        fixed_protocols += "unix,"
-    if present_protocols["inet"]:
-        fixed_protocols += "inet,"
-    if present_protocols["inet6"]:
-        fixed_protocols += "inet6,"
-    if present_protocols["netlink"]:
-        fixed_protocols += "netlink,"
-    if present_protocols["packet"]:
-        fixed_protocols += "packet,"
-    if present_protocols["bluetooth"]:
-        fixed_protocols += "bluetooth,"
+    for protocol in ("unix", "inet", "inet6", "netlink", "packet", "bluetooth"):
+        for prefix in ("", "-", "+", "="):
+            if f",{prefix}{protocol}," in f",{protocols},":
+                fixed_protocols += f"{prefix}{protocol},"
     return fixed_protocols[:-1]
 
 
@@ -132,4 +105,4 @@ def main(args):
 
 
 if __name__ == "__main__":
-    exit(main(argv[1:]))
+    sys_exit(main(argv[1:]))

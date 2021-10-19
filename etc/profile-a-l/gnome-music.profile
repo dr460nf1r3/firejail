@@ -17,7 +17,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -29,6 +28,7 @@ caps.drop all
 netfilter
 no3d
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -42,6 +42,6 @@ tracelog
 # private-bin calls a file manager - whatever is installed!
 #private-bin env,gio-launch-desktop,gnome-music,python*,yelp
 private-dev
-private-etc alternatives,asound.conf,dconf,fonts,fonts,gtk-3.0,machine-id,pulse,selinux,xdg
+private-etc alternatives,asound.conf,dconf,fonts,fonts,gtk-3.0,ld.so.preload,machine-id,pulse,selinux,xdg
 private-tmp
 

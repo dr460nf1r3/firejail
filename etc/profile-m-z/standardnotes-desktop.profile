@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/Standard Notes Backups
@@ -27,6 +26,7 @@ machine-id
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -38,7 +38,7 @@ seccomp !chroot
 disable-mnt
 private-dev
 private-tmp
-private-etc alternatives,ca-certificates,crypto-policies,fonts,host.conf,hostname,hosts,ld.so.cache,pki,resolv.conf,ssl,xdg
+private-etc alternatives,ca-certificates,crypto-policies,fonts,host.conf,hostname,hosts,ld.so.cache,ld.so.preload,pki,resolv.conf,ssl,xdg
 
 dbus-user none
 dbus-system none

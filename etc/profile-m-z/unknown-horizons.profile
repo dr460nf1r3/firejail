@@ -10,7 +10,6 @@ noblacklist ${HOME}/.unknown-horizons
 
 include disable-common.inc
 include disable-exec.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/.unknown-horizons
@@ -25,6 +24,7 @@ apparmor
 caps.drop all
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv

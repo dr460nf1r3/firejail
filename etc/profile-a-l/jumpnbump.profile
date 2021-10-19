@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -28,6 +27,7 @@ caps.drop all
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -42,7 +42,7 @@ disable-mnt
 private-bin jumpnbump
 private-cache
 private-dev
-private-etc none
+private-etc ld.so.preload,none
 private-tmp
 
 dbus-user none

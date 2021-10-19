@@ -16,13 +16,13 @@ blacklist ${RUNUSER}/wayland-*
 include disable-common.inc
 include disable-devel.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
 caps.keep net_admin,net_bind_service,net_raw,setgid,setuid
 no3d
 nodvd
+noinput
 nonewprivs
 nosound
 notv

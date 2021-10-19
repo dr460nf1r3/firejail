@@ -17,7 +17,6 @@ include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
 include disable-programs.inc
-include disable-passwdmgr.inc
 include disable-shell.inc
 include disable-xdg.inc
 
@@ -36,6 +35,7 @@ net none
 nodvd
 no3d
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -50,7 +50,7 @@ disable-mnt
 private-cache
 private-bin onboard,python*,tput
 private-dev
-private-etc alternatives,dbus-1,dconf,fonts,gtk-2.0,gtk-3.0,locale,locale.alias,locale.conf,mime.types,selinux,X11,xdg
+private-etc alternatives,dbus-1,dconf,fonts,gtk-2.0,gtk-3.0,ld.so.preload,locale,locale.alias,locale.conf,mime.types,selinux,X11,xdg
 private-tmp
 
 dbus-system none

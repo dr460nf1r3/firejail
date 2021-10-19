@@ -9,7 +9,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 
@@ -21,6 +20,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -33,7 +33,7 @@ shell none
 
 disable-mnt
 private-bin mate-color-select
-private-etc alternatives,fonts
+private-etc alternatives,fonts,ld.so.preload
 private-dev
 private-lib
 private-tmp

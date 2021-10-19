@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -35,6 +34,7 @@ machine-id
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -49,7 +49,7 @@ tracelog
 private-bin shotwell
 private-cache
 private-dev
-private-etc alternatives,fonts,machine-id
+private-etc alternatives,fonts,ld.so.preload,machine-id
 private-opt none
 private-tmp
 

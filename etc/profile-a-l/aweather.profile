@@ -11,7 +11,6 @@ noblacklist ${HOME}/.config/aweather
 include disable-common.inc
 include disable-devel.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 
@@ -24,6 +23,7 @@ caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound

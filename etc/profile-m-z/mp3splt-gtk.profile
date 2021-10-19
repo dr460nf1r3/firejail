@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 
@@ -24,6 +23,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -37,7 +37,7 @@ tracelog
 private-bin mp3splt-gtk
 private-cache
 private-dev
-private-etc alsa,alternatives,asound.conf,dconf,fonts,gtk-3.0,machine-id,openal,pulse
+private-etc alsa,alternatives,asound.conf,dconf,fonts,gtk-3.0,ld.so.preload,machine-id,openal,pulse
 private-tmp
 
 dbus-user none

@@ -16,7 +16,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -36,6 +35,7 @@ ipc-namespace
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -50,7 +50,7 @@ disable-mnt
 private-bin d-feet,python*
 private-cache
 private-dev
-private-etc alternatives,dbus-1,fonts,machine-id
+private-etc alternatives,dbus-1,fonts,ld.so.preload,machine-id
 private-tmp
 
 #memory-deny-write-execute - breaks on Arch (see issue #1803)

@@ -18,7 +18,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -34,6 +33,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -49,7 +49,7 @@ disable-mnt
 private-bin rsync
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,host.conf,hostname,hosts,nsswitch.conf,pki,protocols,resolv.conf,rpc,services,ssl
+private-etc alternatives,ca-certificates,crypto-policies,host.conf,hostname,hosts,ld.so.preload,nsswitch.conf,pki,protocols,resolv.conf,rpc,services,ssl
 private-tmp
 
 dbus-user none

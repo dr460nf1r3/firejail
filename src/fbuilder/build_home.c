@@ -23,30 +23,6 @@
 static FileDB *db_skip = NULL;
 static FileDB *db_out = NULL;
 
-static void load_whitelist_common(void) {
-	FILE *fp = fopen(SYSCONFDIR "/whitelist-common.inc", "r");
-	if (!fp) {
-		fprintf(stderr, "Error: cannot open whitelist-common.inc\n");
-		exit(1);
-	}
-
-	char buf[MAX_BUF];
-	while (fgets(buf, MAX_BUF, fp)) {
-		if (strncmp(buf, "whitelist ${HOME}/", 18) != 0)
-			continue;
-		char *fn = buf + 18;
-		char *ptr = strchr(buf, '\n');
-		if (!ptr)
-			continue;
-		*ptr = '\0';
-
-		// add the file to skip list
-		db_skip = filedb_add(db_skip, fn);
-	}
-
-	fclose(fp);
-}
-
 void process_home(const char *fname, char *home, int home_len) {
 	assert(fname);
 	assert(home);
@@ -92,6 +68,8 @@ void process_home(const char *fname, char *home, int home_len) {
 			ptr += 7;
 		else if (strncmp(ptr, "open /home", 10) == 0)
 			ptr += 5;
+		else if (strncmp(ptr, "opendir /home", 13) == 0)
+			ptr += 8;
 		else
 			continue;
 
@@ -141,7 +119,7 @@ void process_home(const char *fname, char *home, int home_len) {
 		}
 
 		// skip files and directories in whitelist-common.inc
-		if (filedb_find(db_skip, toadd)) {
+		if (strlen(toadd) == 0 || filedb_find(db_skip, toadd)) {
 			if (dir)
 				free(dir);
 			continue;
@@ -162,7 +140,7 @@ void build_home(const char *fname, FILE *fp) {
 	assert(fname);
 
 	// load whitelist common
-	load_whitelist_common();
+	db_skip = filedb_load_whitelist(db_skip, "whitelist-common.inc", "whitelist ${HOME}/");
 
 	// find user home directory
 	struct passwd *pw = getpwuid(getuid());

@@ -15,7 +15,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -28,6 +27,7 @@ caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -43,7 +43,7 @@ disable-mnt
 private-bin strawberry,strawberry-tagreader
 private-cache
 private-dev
-private-etc ca-certificates,crypto-policies,fonts,host.conf,hostname,hosts,nsswitch.conf,pki,resolv.conf,ssl
+private-etc ca-certificates,crypto-policies,fonts,host.conf,hostname,hosts,ld.so.preload,nsswitch.conf,pki,resolv.conf,ssl
 private-tmp
 
 dbus-system none

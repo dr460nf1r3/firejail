@@ -16,7 +16,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -42,6 +41,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -58,7 +58,7 @@ disable-mnt
 #private-bin apropos,bash,cat,catman,col,gpreconv,groff,grotty,gunzip,gzip,less,man,most,nroff,preconv,sed,sh,tbl,tr,troff,whatis,which,xtotroff,zcat,zsoelim
 private-cache
 private-dev
-private-etc alternatives,fonts,groff,locale,locale.alias,locale.conf,man_db.conf,manpath.config,selinux,sysless,xdg
+private-etc alternatives,fonts,groff,ld.so.preload,locale,locale.alias,locale.conf,man_db.conf,manpath.config,selinux,sysless,xdg
 #private-tmp
 
 dbus-user none

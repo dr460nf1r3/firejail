@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -28,6 +27,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -42,7 +42,7 @@ tracelog
 disable-mnt
 private-bin gnome-screenshot
 private-dev
-private-etc dconf,fonts,gtk-3.0,localtime,machine-id
+private-etc dconf,fonts,gtk-3.0,ld.so.preload,localtime,machine-id
 private-tmp
 
 dbus-user filter

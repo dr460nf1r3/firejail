@@ -59,14 +59,6 @@ include globals.local
 ##ignore noexec ${HOME}
 ##ignore noexec /tmp
 
-##blacklist PATH
-# Disable X11 (CLI only), see also 'x11 none' below
-#blacklist /tmp/.X11-unix
-# Disable Wayland
-#blacklist ${RUNUSER}/wayland-*
-# Disable RUNUSER (cli only)
-#blacklist ${RUNUSER}
-
 # It is common practice to add files/dirs containing program-specific configuration
 # (often ${HOME}/PROGRAMNAME or ${HOME}/.config/PROGRAMNAME) into disable-programs.inc
 # (keep list sorted) and then disable blacklisting below.
@@ -80,6 +72,9 @@ include globals.local
 #  - look what has changed and use that information to populate blacklist and whitelist sections
 #      `ls -aR`
 #noblacklist PATH
+
+# Allow /bin/sh (blacklisted by disable-shell.inc)
+#include allow-bin-sh.inc
 
 # Allows files commonly used by IDEs
 #include allow-common-devel.inc
@@ -103,20 +98,28 @@ include globals.local
 # Allow ruby (blacklisted by disable-interpreters.inc)
 #include allow-ruby.inc
 
-# Allow /bin/sh (blacklisted by disable-shell.inc)
-#include allow-bin-sh.inc
-
 # Allow ssh (blacklisted by disable-common.inc)
 #include allow-ssh.inc
 
+##blacklist PATH
+# Disable Wayland
+#blacklist ${RUNUSER}/wayland-*
+# Disable RUNUSER (cli only; supersedes Disable Wayland)
+#blacklist ${RUNUSER}
+# Remove the next blacklist if you system has no /usr/libexec dir,
+# otherwise try to add it.
+#blacklist /usr/libexec
+
+# disable-*.inc includes
+# remove disable-write-mnt.inc if you set disable-mnt
 #include disable-common.inc
 #include disable-devel.inc
 #include disable-exec.inc
 #include disable-interpreters.inc
-#include disable-passwdmgr.inc
 #include disable-programs.inc
 #include disable-shell.inc
 #include disable-write-mnt.inc
+#include disable-X11.inc
 #include disable-xdg.inc
 
 # This section often mirrors noblacklist section above. The idea is
@@ -128,6 +131,7 @@ include globals.local
 ##mkfile PATH
 #whitelist PATH
 #include whitelist-common.inc
+#include whitelist-run-common.inc
 #include whitelist-runuser-common.inc
 #include whitelist-usr-share-common.inc
 #include whitelist-var-common.inc
@@ -148,6 +152,7 @@ include globals.local
 ##nodbus (deprecated, use 'dbus-user none' and 'dbus-system none', see below)
 #nodvd
 #nogroups
+#noinput
 #nonewprivs
 #noroot
 #nosound
@@ -167,7 +172,7 @@ include globals.local
 ##seccomp-error-action log (only for debugging seccomp issues)
 #shell none
 #tracelog
-# Prefer 'x11 none' instead of 'blacklist /tmp/.X11-unix' if 'net none' is set
+# Prefer 'x11 none' instead of 'disable-X11.inc' if 'net none' is set
 ##x11 none
 
 #disable-mnt
@@ -186,7 +191,7 @@ include globals.local
 #  GUI: fonts,pango,X11
 #  GTK: dconf,gconf,gtk-2.0,gtk-3.0
 #  KDE: kde4rc,kde5rc
-#  Networking: ca-certificates,crypto-policies,host.conf,hostname,hosts,nsswitch.conf,pki,protocols,resolv.conf,services,rpc,ssl
+#  Networking: ca-certificates,crypto-policies,host.conf,hostname,hosts,nsswitch.conf,pki,protocols,resolv.conf,rpc,services,ssl
 #    Extra: gai.conf,proxychains.conf
 #  Qt: Trolltech.conf
 ##private-lib LIBS
@@ -199,7 +204,7 @@ include globals.local
 
 # Since 0.9.63 also a more granular control of dbus is supported.
 # To get the dbus-addresses an application needs access to you can
-# check with flatpak (when the application is distriputed that way):
+# check with flatpak (when the application is distributed that way):
 #    flatpak remote-info --show-metadata flathub <APP-ID>
 # Notes:
 #  - flatpak implicitly allows an app to own <APP-ID> on the session bus
@@ -219,3 +224,4 @@ include globals.local
 #memory-deny-write-execute
 ##noexec PATH
 ##read-only ${HOME}
+##read-write ${HOME}

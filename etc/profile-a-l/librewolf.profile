@@ -18,12 +18,39 @@ whitelist ${HOME}/.librewolf
 #noblacklist ${HOME}/.mozilla
 #whitelist ${HOME}/.mozilla
 
-# librewolf requires a shell to launch on Arch. We can possibly remove sh though.
-# Add the next line to your librewolf.local to enable private-bin.
-#private-bin bash,dbus-launch,dbus-send,env,librewolf,python*,sh,which
-# Add the next line to your librewolf.local to enable private-etc. Note
-# that private-etc must first be enabled in firefox-common.local.
+# To enable KeePassXC Plugin add one of the following lines to your librewolf.local.
+# NOTE: start KeePassXC before Librewolf and keep it open to allow communication between them.
+#whitelist ${RUNUSER}/kpxc_server
+#whitelist ${RUNUSER}/org.keepassxc.KeePassXC.BrowserServer
+
+whitelist /usr/share/doc
+whitelist /usr/share/gtk-doc/html
+whitelist /usr/share/mozilla
+whitelist /usr/share/webext
+include whitelist-usr-share-common.inc
+
+# Add the next line to your librewolf.local to enable private-bin (Arch Linux).
+#private-bin dbus-launch,dbus-send,librewolf,sh
+# Add the next line to your librewolf.local to enable private-etc.
+# NOTE: private-etc must first be enabled in firefox-common.local.
 #private-etc librewolf
+
+dbus-user filter
+dbus-user.own org.mozilla.librewolf.*
+# Add the next line to your librewolf.local to enable native notifications.
+#dbus-user.talk org.freedesktop.Notifications
+# Add the next line to your librewolf.local to allow inhibiting screensavers.
+#dbus-user.talk org.freedesktop.ScreenSaver
+# Add the next lines to your librewolf.local for plasma browser integration.
+#dbus-user.own org.mpris.MediaPlayer2.plasma-browser-integration
+#dbus-user.talk org.kde.JobViewServer
+#dbus-user.talk org.kde.kuiserver
+# Add the next line to your librewolf.local to allow screensharing under Wayland.
+#dbus-user.talk org.freedesktop.portal.Desktop
+# Also add the next line to your librewolf.local if screensharing does not work with
+# the above lines (depends on the portal implementation).
+#ignore noroot
+ignore dbus-user none
 
 # Redirect
 include firefox-common.profile

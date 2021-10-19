@@ -7,11 +7,12 @@ include email-common.local
 # added by caller profile
 #include globals.local
 
+noblacklist ${HOME}/.bogofilter
 noblacklist ${HOME}/.gnupg
 noblacklist ${HOME}/.mozilla
 noblacklist ${HOME}/.signature
 # when storing mail outside the default ${HOME}/Mail path, 'noblacklist' the custom path in your email-common.local
-# and 'blacklist' it in your disable-common.local too so it is  kept hidden from other applications
+# and 'blacklist' it in your disable-common.local too so it is kept hidden from other applications
 noblacklist ${HOME}/Mail
 
 noblacklist ${DOCUMENTS}
@@ -20,7 +21,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -50,6 +50,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -65,7 +66,7 @@ tracelog
 # disable-mnt
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,dconf,fonts,gcrypt,gnupg,groups,gtk-2.0,gtk-3.0,hostname,hosts,hosts.conf,mailname,nsswitch.conf,passwd,pki,resolv.conf,selinux,ssl,xdg
+private-etc alternatives,ca-certificates,crypto-policies,dconf,fonts,gcrypt,gnupg,groups,gtk-2.0,gtk-3.0,hostname,hosts,hosts.conf,ld.so.preload,mailname,nsswitch.conf,passwd,pki,resolv.conf,selinux,ssl,xdg
 private-tmp
 # encrypting and signing email
 writable-run-user

@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -31,6 +30,7 @@ machine-id
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -45,7 +45,7 @@ disable-mnt
 private-bin com.github.bleakgrey.tootle
 private-cache
 private-dev
-private-etc alsa,alternatives,asound.conf,ca-certificates,crypto-policies,dconf,fonts,gtk-2.0,gtk-3.0,host.conf,hostname,hosts,machine-id mime.types,nsswitch.conf,pki,pulse,resolv.conf,ssl,X11,xdg
+private-etc alsa,alternatives,asound.conf,ca-certificates,crypto-policies,dconf,fonts,gtk-2.0,gtk-3.0,host.conf,hostname,hosts,ld.so.preload,machine-id mime.types,nsswitch.conf,pki,pulse,resolv.conf,ssl,X11,xdg
 private-tmp
 
 # Settings are immutable

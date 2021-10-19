@@ -11,7 +11,6 @@ noblacklist ${HOME}/.surf
 include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/.surf
@@ -22,6 +21,7 @@ include whitelist-common.inc
 caps.drop all
 netfilter
 nodvd
+noinput
 nonewprivs
 noroot
 notv
@@ -34,6 +34,6 @@ tracelog
 disable-mnt
 private-bin bash,curl,dmenu,ls,printf,sed,sh,sleep,st,stterm,surf,xargs,xprop
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,fonts,group,hosts,machine-id,passwd,pki,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,fonts,group,hosts,ld.so.preload,machine-id,passwd,pki,resolv.conf,ssl
 private-tmp
 

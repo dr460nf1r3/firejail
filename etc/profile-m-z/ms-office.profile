@@ -16,13 +16,13 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -35,7 +35,7 @@ tracelog
 
 disable-mnt
 private-bin bash,env,fonts,jak,ms-office,python*,sh
-private-etc alternatives,ca-certificates,crypto-policies,pki,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,ld.so.preload,pki,resolv.conf,ssl
 private-dev
 private-tmp
 

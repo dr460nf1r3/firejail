@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -29,6 +28,7 @@ caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -43,7 +43,7 @@ disable-mnt
 private-bin bash,cut,glxinfo,grep,head,openarena,openarena_ded,quake3,zenity
 private-cache
 private-dev
-private-etc drirc,machine-id,openal,passwd,selinux,udev,xdg
+private-etc drirc,ld.so.preload,machine-id,openal,passwd,selinux,udev,xdg
 private-tmp
 
 dbus-user none

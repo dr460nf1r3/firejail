@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/.cache/mate-calc
@@ -30,6 +29,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -42,7 +42,7 @@ shell none
 
 disable-mnt
 private-bin mate-calc,mate-calculator
-private-etc alternatives,dconf,fonts,gtk-3.0
+private-etc alternatives,dconf,fonts,gtk-3.0,ld.so.preload
 private-dev
 private-opt none
 private-tmp

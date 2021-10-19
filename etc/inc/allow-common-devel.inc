@@ -15,6 +15,7 @@ noblacklist ${HOME}/.java
 noblacklist ${HOME}/.node-gyp
 noblacklist ${HOME}/.npm
 noblacklist ${HOME}/.npmrc
+noblacklist ${HOME}/.nvm
 noblacklist ${HOME}/.yarn
 noblacklist ${HOME}/.yarn-config
 noblacklist ${HOME}/.yarncache
@@ -26,11 +27,8 @@ noblacklist ${HOME}/.python-history
 noblacklist ${HOME}/.python_history
 noblacklist ${HOME}/.pythonhist
 
+# Ruby
+noblacklist ${HOME}/.bundle
+
 # Rust
-noblacklist ${HOME}/.cargo/advisory-db
-noblacklist ${HOME}/.cargo/config
-noblacklist ${HOME}/.cargo/git
-noblacklist ${HOME}/.cargo/registry
-noblacklist ${HOME}/.cargo/.crates.toml
-noblacklist ${HOME}/.cargo/.crates2.json
-noblacklist ${HOME}/.cargo/.package-cache
+noblacklist ${HOME}/.cargo

@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -30,6 +29,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -47,7 +47,7 @@ private
 private-bin bash,sh,whois
 private-cache
 private-dev
-private-etc alternatives,hosts,jwhois.conf,resolv.conf,services,whois.conf
+private-etc alternatives,hosts,jwhois.conf,ld.so.preload,resolv.conf,services,whois.conf
 private-lib gconv
 private-tmp
 

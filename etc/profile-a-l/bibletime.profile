@@ -16,7 +16,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/.bibletime
@@ -38,6 +37,7 @@ machine-id
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -52,7 +52,7 @@ disable-mnt
 # private-bin bibletime,qt5ct
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,fonts,login.defs,machine-id,passwd,pki,resolv.conf,ssl,sword,sword.conf
+private-etc alternatives,ca-certificates,crypto-policies,fonts,ld.so.preload,login.defs,machine-id,passwd,pki,resolv.conf,ssl,sword,sword.conf
 private-tmp
 
 dbus-user none

@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -20,6 +19,7 @@ include disable-xdg.inc
 mkdir ${HOME}/.megaglest
 whitelist ${HOME}/.megaglest
 whitelist /usr/share/megaglest
+whitelist /usr/share/games/megaglest	# Debian version
 include whitelist-common.inc
 include whitelist-runuser-common.inc
 include whitelist-usr-share-common.inc
@@ -31,6 +31,7 @@ ipc-namespace
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv

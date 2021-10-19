@@ -28,7 +28,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -56,6 +55,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 nosound
 notv
@@ -68,5 +68,5 @@ shell none
 disable-mnt
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,dconf,group,hostname,hosts,i2p,java-10-openjdk,java-11-openjdk,java-12-openjdk,java-13-openjdk,java-8-openjdk,java-9-openjdk,java-openjdk,ld.so.cache,localtime,machine-id,nsswitch.conf,passwd,pki,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,dconf,group,hostname,hosts,i2p,java-10-openjdk,java-11-openjdk,java-12-openjdk,java-13-openjdk,java-8-openjdk,java-9-openjdk,java-openjdk,ld.so.cache,ld.so.preload,localtime,machine-id,nsswitch.conf,passwd,pki,resolv.conf,ssl
 private-tmp

@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -32,6 +31,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -45,7 +45,7 @@ tracelog
 private-bin ocenaudio
 private-cache
 private-dev
-private-etc alternatives,asound.conf,fonts,ld.so.cache,pulse
+private-etc alternatives,asound.conf,fonts,ld.so.cache,ld.so.preload,pulse
 private-tmp
 
 # breaks preferences

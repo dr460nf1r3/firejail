@@ -11,7 +11,6 @@ noblacklist ${HOME}/.local/share/kxmlgui5/calligra
 include disable-common.inc
 include disable-devel.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 caps.drop all
@@ -20,6 +19,7 @@ ipc-namespace
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv

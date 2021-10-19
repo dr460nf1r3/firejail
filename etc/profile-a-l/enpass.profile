@@ -16,7 +16,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -32,16 +31,17 @@ whitelist ${DOCUMENTS}
 include whitelist-common.inc
 include whitelist-var-common.inc
 
-# machine-id and nosound break audio notification functionality
-# comment both if you need that functionality or put 'ignore machine-id'
-# and 'ignore nosound' in your enpass.local
-
+# machine-id and nosound break audio notification functionality.
+# Add the next lines to your enpass.local if you need that functionality.
+#ignore machine-id
+#ignore nosound
 caps.drop all
 machine-id
 netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound

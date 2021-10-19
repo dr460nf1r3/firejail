@@ -8,7 +8,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -26,6 +25,7 @@ caps.keep sys_admin,sys_chroot
 netfilter
 nodvd
 nogroups
+noinput
 notv
 nou2f
 novideo

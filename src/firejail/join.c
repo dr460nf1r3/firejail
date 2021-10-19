@@ -45,7 +45,7 @@ static unsigned display = 0;
 static void signal_handler(int sig){
 	flush_stdin();
 
-	exit(sig);
+	exit(128 + sig);
 }
 
 static void install_handler(void) {
@@ -103,7 +103,7 @@ static void extract_x11_display(pid_t pid) {
 	if (asprintf(&fname, "%s/%d", RUN_FIREJAIL_X11_DIR, pid) == -1)
 		errExit("asprintf");
 
-	FILE *fp = fopen(fname, "r");
+	FILE *fp = fopen(fname, "re");
 	free(fname);
 	if (!fp)
 		return;
@@ -147,7 +147,7 @@ static void extract_command(int argc, char **argv, int index) {
 	}
 
 	// build command
-	build_cmdline(&cfg.command_line, &cfg.window_title, argc, argv, index);
+	build_cmdline(&cfg.command_line, &cfg.window_title, argc, argv, index, true);
 }
 
 static void extract_nogroups(pid_t pid) {
@@ -219,7 +219,7 @@ static void extract_caps(pid_t pid) {
 		perror("asprintf");
 		exit(1);
 	}
-	FILE *fp = fopen(file, "r");
+	FILE *fp = fopen(file, "re");
 	if (!fp)
 		goto errexit;
 
@@ -266,7 +266,7 @@ static void extract_user_namespace(pid_t pid) {
 	char *uidmap;
 	if (asprintf(&uidmap, "/proc/%u/uid_map", pid) == -1)
 		errExit("asprintf");
-	FILE *fp = fopen(uidmap, "r");
+	FILE *fp = fopen(uidmap, "re");
 	if (!fp) {
 		free(uidmap);
 		return;
@@ -431,7 +431,7 @@ void join(pid_t pid, int argc, char **argv, int index) {
 
 	// set cgroup
 	if (cfg.cgroup)	// not available for uid 0
-		set_cgroup(cfg.cgroup);
+		set_cgroup(cfg.cgroup, getpid());
 
 	// join namespaces
 	if (arg_join_network) {
@@ -536,7 +536,6 @@ void join(pid_t pid, int argc, char **argv, int index) {
 		prctl(PR_SET_PDEATHSIG, SIGKILL, 0, 0, 0);
 
 #ifdef HAVE_APPARMOR
-		// add apparmor confinement after the execve
 		set_apparmor();
 #endif
 
@@ -551,10 +550,6 @@ void join(pid_t pid, int argc, char **argv, int index) {
 		// set cpu affinity
 		if (cfg.cpus)	// not available for uid 0
 			set_cpu_affinity();
-
-		// set nice value
-		if (arg_nice)
-			set_nice(cfg.nice);
 
 		// add x11 display
 		if (display) {
@@ -573,6 +568,11 @@ void join(pid_t pid, int argc, char **argv, int index) {
 		if (stat(RUN_DBUS_SYSTEM_SOCKET, &s) == 0)
 			dbus_set_system_bus_env();
 #endif
+
+		// set nice and rlimits
+		if (arg_nice)
+			set_nice(cfg.nice);
+		set_rlimits();
 
 		start_application(0, shfd, NULL);
 
@@ -596,15 +596,17 @@ void join(pid_t pid, int argc, char **argv, int index) {
 
 	// end of signal-safe code
 	//*****************************
-	flush_stdin();
 
 	if (WIFEXITED(status)) {
+		// if we had a proper exit, return that exit status
 		status = WEXITSTATUS(status);
 	} else if (WIFSIGNALED(status)) {
-		status = WTERMSIG(status);
+		// distinguish fatal signals by adding 128
+		status = 128 + WTERMSIG(status);
 	} else {
-		status = 0;
+		status = -1;
 	}
 
+	flush_stdin();
 	exit(status);
 }

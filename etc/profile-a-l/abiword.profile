@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 
@@ -28,6 +27,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -42,7 +42,7 @@ tracelog
 private-bin abiword
 private-cache
 private-dev
-private-etc fonts,gtk-3.0,passwd
+private-etc fonts,gtk-3.0,ld.so.preload,passwd
 private-tmp
 
 # dbus-user none

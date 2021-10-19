@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 # include disable-shell.inc
 include disable-write-mnt.inc
@@ -33,6 +32,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -50,7 +50,7 @@ private-bin bash,ipcalc,ipcalc-ng,perl,sh
 # private-cache
 private-dev
 # empty etc directory
-private-etc none
+private-etc ld.so.preload,none
 private-lib
 private-opt none
 private-tmp

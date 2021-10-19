@@ -12,7 +12,6 @@ noblacklist ${HOME}/.config/geany
 include allow-common-devel.inc
 
 include disable-common.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 caps.drop all
@@ -20,6 +19,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound

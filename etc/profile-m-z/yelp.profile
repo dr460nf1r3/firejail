@@ -12,13 +12,13 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
 
 mkdir ${HOME}/.config/yelp
 whitelist ${HOME}/.config/yelp
+whitelist /usr/libexec/webkit2gtk-4.0
 whitelist /usr/share/doc
 whitelist /usr/share/groff
 whitelist /usr/share/help
@@ -38,6 +38,7 @@ caps.drop all
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 # nosound - add the next line to your yelp.local if you don't need sound support.
@@ -55,7 +56,7 @@ disable-mnt
 private-bin groff,man,tbl,troff,yelp
 private-cache
 private-dev
-private-etc alsa,alternatives,asound.conf,crypto-policies,cups,dconf,drirc,fonts,gcrypt,groff,gtk-3.0,machine-id,man_db.conf,openal,os-release,pulse,sgml,xml
+private-etc alsa,alternatives,asound.conf,crypto-policies,cups,dconf,drirc,fonts,gcrypt,groff,gtk-3.0,ld.so.preload,machine-id,man_db.conf,openal,os-release,pulse,sgml,xml
 private-tmp
 
 dbus-user filter

@@ -19,7 +19,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -44,9 +43,9 @@ apparmor
 caps.drop all
 machine-id
 netfilter
-no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -62,10 +61,11 @@ tracelog
 disable-mnt
 private-bin nextcloud,nextcloud-desktop
 private-cache
-private-etc alternatives,ca-certificates,crypto-policies,drirc,fonts,gcrypt,host.conf,hosts,ld.so.cache,machine-id,Nextcloud,nsswitch.conf,os-release,passwd,pki,pulse,resolv.conf,selinux,ssl,xdg
+private-etc alternatives,ca-certificates,crypto-policies,drirc,fonts,gcrypt,host.conf,hosts,ld.so.cache,ld.so.preload,machine-id,Nextcloud,nsswitch.conf,os-release,passwd,pki,pulse,resolv.conf,selinux,ssl,xdg
 private-dev
 private-tmp
 
 dbus-user filter
 dbus-user.talk org.freedesktop.secrets
+?ALLOW_TRAY: dbus-user.talk org.kde.StatusNotifierWatcher
 dbus-system none

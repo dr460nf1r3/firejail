@@ -17,7 +17,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -40,6 +39,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -53,7 +53,7 @@ disable-mnt
 private-bin gzip,lynx,newsboat,sh,w3m
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,lynx.cfg,lynx.lss,pki,resolv.conf,ssl,terminfo
+private-etc alternatives,ca-certificates,crypto-policies,ld.so.preload,lynx.cfg,lynx.lss,pki,resolv.conf,ssl,terminfo
 private-tmp
 
 dbus-user none

@@ -21,6 +21,7 @@
 // sudo mount -o loop krita-3.0-x86_64.appimage mnt
 
 #include "firejail.h"
+#include "../include/gcov_wrapper.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/mount.h>
@@ -30,6 +31,7 @@
 
 static char *devloop = NULL;	// device file
 static long unsigned size = 0;	// offset into appimage file
+#define MAXBUF 4096
 
 #ifdef LOOP_CTL_GET_FREE	// test for older kernels; this definition is found in /usr/include/linux/loop.h
 static void err_loop(void) {
@@ -37,6 +39,36 @@ static void err_loop(void) {
 	exit(1);
 }
 #endif
+
+// return 1 if found
+int appimage_find_profile(const char *archive) {
+	assert(archive);
+	assert(strlen(archive));
+
+	// try to match the name of the archive with the list of programs in /usr/lib/firejail/firecfg.config
+	FILE *fp = fopen(LIBDIR "/firejail/firecfg.config", "r");
+	if (!fp) {
+		fprintf(stderr, "Error: cannot find %s, firejail is not correctly installed\n", LIBDIR "/firejail/firecfg.config");
+		exit(1);
+	}
+	char buf[MAXBUF];
+	while (fgets(buf, MAXBUF, fp)) {
+		if (*buf == '#')
+			continue;
+		char *ptr = strchr(buf, '\n');
+		if (ptr)
+			*ptr = '\0';
+		if (strcasestr(archive, buf)) {
+			fclose(fp);
+			return profile_find_firejail(buf, 1);
+		}
+	}
+
+	fclose(fp);
+	return 0;
+
+}
+
 
 void appimage_set(const char *appimage) {
 	assert(appimage);
@@ -67,7 +99,7 @@ void appimage_set(const char *appimage) {
 
 	// find or allocate a free loop device to use
 	EUID_ROOT();
-	int cfd = open("/dev/loop-control", O_RDWR);
+	int cfd = open("/dev/loop-control", O_RDWR|O_CLOEXEC);
 	if (cfd == -1)
 		err_loop();
 	int devnr = ioctl(cfd, LOOP_CTL_GET_FREE);
@@ -78,7 +110,7 @@ void appimage_set(const char *appimage) {
 		errExit("asprintf");
 
 	// associate loop device with appimage
-	int lfd = open(devloop, O_RDONLY);
+	int lfd = open(devloop, O_RDONLY|O_CLOEXEC);
 	if (lfd == -1)
 		err_loop();
 	if (ioctl(lfd, LOOP_SET_FD, ffd) == -1)
@@ -109,9 +141,8 @@ void appimage_set(const char *appimage) {
 
 	if (cfg.cwd)
 		env_store_name_val("OWD", cfg.cwd, SETENV);
-#ifdef HAVE_GCOV
+
 	__gcov_flush();
-#endif
 #else
 	fprintf(stderr, "Error: /dev/loop-control interface is not supported by your kernel\n");
 	exit(1);
@@ -146,7 +177,7 @@ void appimage_mount(void) {
 void appimage_clear(void) {
 	EUID_ROOT();
 	if (devloop) {
-		int lfd = open(devloop, O_RDONLY);
+		int lfd = open(devloop, O_RDONLY|O_CLOEXEC);
 		if (lfd != -1) {
 			if (ioctl(lfd, LOOP_CLR_FD, 0) != -1)
 				fmessage("AppImage detached\n");

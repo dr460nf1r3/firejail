@@ -22,7 +22,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 
@@ -34,6 +33,7 @@ caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -46,7 +46,7 @@ shell none
 
 private-bin gimp*,gwenview,kbuildsycoca4,kdeinit4
 private-dev
-private-etc alternatives,fonts,gimp,gtk-2.0,kde4rc,kde5rc,ld.so.cache,machine-id,passwd,pulse,xdg
+private-etc alternatives,fonts,gimp,gtk-2.0,kde4rc,kde5rc,ld.so.cache,ld.so.preload,machine-id,passwd,pulse,xdg
 
 # dbus-user none
 # dbus-system none

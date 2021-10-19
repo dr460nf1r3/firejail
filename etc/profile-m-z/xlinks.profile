@@ -8,14 +8,13 @@ include xlinks.local
 #include globals.local
 
 noblacklist /tmp/.X11-unix
-noblacklist ${HOME}/.links
 
 include whitelist-common.inc
 
 # if you want to use user-configured programs add 'private-bin PROGRAM1,PROGRAM2'
 # to your xlinks.local or append 'PROGRAM1,PROGRAM2' to this private-bin line
 private-bin xlinks
-private-etc fonts
+private-etc fonts,ld.so.preload
 
 # Redirect
 include links.profile

@@ -248,7 +248,9 @@ int sbox_run(unsigned filtermask, int num, ...) {
 	va_start(valist, num);
 
 	// build argument list
-	char **arg = malloc((num + 1) * sizeof(char *));
+	char **arg = calloc(num + 1, sizeof(char *));
+	if (!arg)
+		errExit("calloc");
 	int i;
 	for (i = 0; i < num; i++)
 		arg[i] = va_arg(valist, char *);
@@ -263,7 +265,6 @@ int sbox_run(unsigned filtermask, int num, ...) {
 }
 
 int sbox_run_v(unsigned filtermask, char * const arg[]) {
-	EUID_ROOT();
 	assert(arg);
 
 	if (arg_debug) {
@@ -283,6 +284,7 @@ int sbox_run_v(unsigned filtermask, char * const arg[]) {
 	if (child < 0)
 		errExit("fork");
 	if (child == 0) {
+		EUID_ROOT();
 		sbox_do_exec_v(filtermask, arg);
 	}
 
@@ -291,7 +293,7 @@ int sbox_run_v(unsigned filtermask, char * const arg[]) {
 		errExit("waitpid");
 	}
 	if (WIFEXITED(status) && WEXITSTATUS(status) != 0) {
-		fprintf(stderr, "Error: failed to run %s\n", arg[0]);
+		fprintf(stderr, "Error: failed to run %s, exiting...\n", arg[0]);
 		exit(1);
 	}
 

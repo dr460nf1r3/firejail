@@ -1,18 +1,84 @@
 .TH FIREJAIL-PROFILE 5 "MONTH YEAR" "VERSION" "firejail profiles man page"
 .SH NAME
-profile \- Security profile file syntax for Firejail
+profile \- Security profile file syntax, and information about building new application profiles.
 
-.SH USAGE
+.SH SYNOPSIS
+
+Using a specific profile:
+.PP
+.RS
 .TP
-firejail \-\-profile=filename.profile
+\fBfirejail \-\-profile=filename.profile
+.br
+
+.br
+Example:
+.br
+$ firejail --profile=/etc/firejail/kdenlive.profile --appimage kdenlive.appimage
+.br
+
+.br
+.TP
+\fBfirejail \-\-profile=profile_name
+.br
+
+.br
+Example:
+.br
+$ firejail --profile=kdenlive --appimage kdenlive.appimage
+.br
+
+.br
 .RE
-firejail \-\-profile=profile_name
+.PP
+
+
+
+Building a profile manually:
+.PP
+.RS
+Start with the template in /usr/share/doc/firejail/profile.template and modify it in a text editor.
+To integrate the program in your desktop environment copy the profile file in ~/.config/firejail
+directory and run "sudo firecfg".
+.RE
+.PP
+
+Aliases and redirections:
+.PP
+.RS
+In some cases the same profile can be used for several applications.
+One such example is LibreOffice.
+Build a regular profile for the main application, and for the rest use
+/usr/share/doc/firejail/redirect_alias-profile.template.
+.RE
+.PP
+
+Running the profile builder:
+.PP
+.RS
+.TP
+\fBfirejail \-\-build=appname.profile appname
+.br
+
+.br
+Example:
+.br
+$ firejail --build=blobby.profile blobby
+.br
+
+.br
+Run the program in "firejail \-\-build" and try to exercise as many program features as possible.
+The profile is extracted and saved in the current directory. Open it in a text editor and add or remove
+sandboxing options as necessary. Test again after modifying the profile. To integrate the program
+in your desktop environment copy the profile file in ~/.config/firejail directory and run "sudo firecfg".
+.RE
+.PP
 
 .SH DESCRIPTION
 Several command line options can be passed to the program using
 profile files. Firejail chooses the profile file as follows:
 
-\fB1.\fR If a profile file is provided by the user with \-\-profile option, the profile file is loaded. If a profile name is given, it is searched for first in the ~/.config/firejail directory and if not found then in  /etc/firejail directory. Profile names do not include the .profile suffix.
+\fB1.\fR If a profile file is provided by the user with \-\-profile option, the profile file is loaded. If a profile name is given, it is searched for first in the ~/.config/firejail directory and if not found then in /etc/firejail directory. Profile names do not include the .profile suffix.
 Example:
 .PP
 .RS
@@ -94,6 +160,11 @@ Example: "blacklist ~/My Virtual Machines"
 
 .TP
 \fB# this is a comment
+Example:
+
+# disable networking
+.br
+net none # this command creates an empty network namespace
 
 .TP
 \fB?CONDITIONAL: profile line
@@ -103,7 +174,7 @@ Example: "?HAS_APPIMAGE: whitelist ${HOME}/special/appimage/dir"
 
 This example will load the whitelist profile line only if the \-\-appimage option has been specified on the command line.
 
-Currently the only conditionals supported this way are HAS_APPIMAGE, HAS_NET, HAS_NODBUS, HAS_NOSOUND, HAS_PRIVATE and HAS_X11. The conditionals BROWSER_DISABLE_U2F and BROWSER_ALLOW_DRM
+Currently the only conditionals supported this way are HAS_APPIMAGE, HAS_NET, HAS_NODBUS, HAS_NOSOUND, HAS_PRIVATE and HAS_X11. The conditionals ALLOW_TRAY, BROWSER_DISABLE_U2F and BROWSER_ALLOW_DRM
 can be enabled or disabled globally in Firejail's configuration file.
 
 The profile line may be any profile line that you would normally use in a profile \fBexcept\fR for "quiet" and "include" lines.
@@ -205,6 +276,10 @@ Mount-bind file1 on top of file2. This option is only available when running as 
 \fBdisable-mnt
 Disable /mnt, /media, /run/mount and /run/media access.
 .TP
+\fBkeep-config-pulse
+Disable automatic ~/.config/pulse init, for complex setups such as remote
+pulse servers or non-standard socket paths.
+.TP
 \fBkeep-dev-shm
 /dev/shm directory is untouched (even with private-dev).
 .TP
@@ -249,16 +324,16 @@ Remount the file or the directory noexec, nodev and nosuid.
 #ifdef HAVE_OVERLAYFS
 .TP
 \fBoverlay
-Mount  a  filesystem  overlay  on top of the current filesystem.
-The overlay is stored in $HOME/.firejail/<PID>  directory.
+Mount a filesystem overlay on top of the current filesystem.
+The overlay is stored in $HOME/.firejail/<PID> directory.
 .TP
 \fBoverlay-named name
-Mount  a  filesystem  overlay  on top of the current filesystem.
-The overlay is stored in $HOME/.firejail/name  directory.
+Mount a filesystem overlay on top of the current filesystem.
+The overlay is stored in $HOME/.firejail/name directory.
 .TP
 \fBoverlay-tmpfs
-Mount  a  filesystem  overlay  on top of the current filesystem.
-All filesystem  modifications are discarded when the sandbox is closed.
+Mount a filesystem overlay on top of the current filesystem.
+All filesystem modifications are discarded when the sandbox is closed.
 #endif
 .TP
 \fBprivate
@@ -295,7 +370,9 @@ Use the options no3d, nodvd, nosound, notv, nou2f and novideo for additional res
 Build a new /etc in a temporary
 filesystem, and copy the files and directories in the list.
 The files and directories in the list must be expressed as relative to
-the /etc directory.
+the /etc directory, and must not contain the / character
+(e.g., /etc/foo must be expressed as foo, but /etc/foo/bar --
+expressed as foo/bar -- is disallowed).
 All modifications are discarded when the sandbox is closed.
 #ifdef HAVE_PRIVATE_HOME
 .TP
@@ -319,14 +396,18 @@ This feature is still under development, see \fBman 1 firejail\fR for some examp
 Build a new /opt in a temporary
 filesystem, and copy the files and directories in the list.
 The files and directories in the list must be expressed as relative to
-the /opt directory.
+the /opt directory, and must not contain the / character
+(e.g., /opt/foo must be expressed as foo, but /opt/foo/bar --
+expressed as foo/bar -- is disallowed).
 All modifications are discarded when the sandbox is closed.
 .TP
 \fBprivate-srv file,directory
 Build a new /srv in a temporary
 filesystem, and copy the files and directories in the list.
 The files and directories in the list must be expressed as relative to
-the /srv directory.
+the /srv directory, and must not contain the / character
+(e.g., /srv/foo must be expressed as foo, but /srv/foo/bar --
+expressed as foo/bar -- is disallowed).
 All modifications are discarded when the sandbox is closed.
 .TP
 \fBprivate-tmp
@@ -339,7 +420,7 @@ Make directory or file read-only.
 Make directory or file read-write.
 .TP
 \fBtmpfs directory
-Mount an empty tmpfs filesystem on top of directory. This option is available only when running the sandbox as root.
+Mount an empty tmpfs filesystem on top of directory. Directories outside user home or not owned by the user are not allowed. Sandboxes running as root are exempt from these restrictions.
 .TP
 \fBtracelog
 Blacklist violations logged to syslog.
@@ -347,8 +428,9 @@ Blacklist violations logged to syslog.
 \fBwhitelist file_or_directory
 Whitelist directory or file. A temporary file system is mounted on the top directory, and the
 whitelisted files are mount-binded inside. Modifications to whitelisted files are persistent,
-everything else is discarded when the sandbox is closed. The top directory could be
-user home, /dev, /etc, /media, /mnt, /opt, /srv, /sys/module, /usr/share, /var, and /tmp.
+everything else is discarded when the sandbox is closed. The top directory can be
+all directories in / (except /proc and /sys), /sys/module, /run/user/$UID, $HOME and
+all directories in /usr.
 .br
 
 .br
@@ -405,12 +487,12 @@ does not result in an increase of privilege.
 #ifdef HAVE_USERNS
 .TP
 \fBnoroot
-Use this command  to enable an user namespace. The namespace has only one user, the current user.
+Use this command to enable an user namespace. The namespace has only one user, the current user.
 There is no root account (uid 0) defined in the namespace.
 #endif
 .TP
 \fBprotocol protocol1,protocol2,protocol3
-Enable protocol filter. The filter is based on seccomp and  checks the
+Enable protocol filter. The filter is based on seccomp and checks the
 first argument to socket system call. Recognized values: \fBunix\fR,
 \fBinet\fR, \fBinet6\fR, \fBnetlink\fR, \fBpacket\fR and \fBbluetooth\fR.
 .TP
@@ -524,7 +606,7 @@ Allow the application to see but not talk to the name org.freedesktop.Notificati
 Allow the application to call methods of the interface org.freedesktop.Notifications of the object exposed at the path /org/freedesktop/Notifications by the client owning the bus name org.freedesktop.Notifications on the system DBus.
 .TP
 \fBdbus-system.broadcast org.freedesktop.Notifications=org.freedesktop.Notifications.*@/org/freedesktop/Notifications
-Allow the application to receive broadcast signals from the the interface org.freedesktop.Notifications of the object exposed at the path /org/freedesktop/Notifications by the client owning the bus name org.freedesktop.Notifications on the system DBus.
+Allow the application to receive broadcast signals from the interface org.freedesktop.Notifications of the object exposed at the path /org/freedesktop/Notifications by the client owning the bus name org.freedesktop.Notifications on the system DBus.
 .TP
 \fBdbus-user filter
 Enable filtered access to the session DBus. Filters can be specified with the dbus-user.talk and dbus-user.own commands.
@@ -646,15 +728,17 @@ name browser
 \fBno3d
 Disable 3D hardware acceleration.
 .TP
-\fBnoautopulse
-Disable automatic ~/.config/pulse init, for complex setups such as remote
-pulse servers or non-standard socket paths.
+\fBnoautopulse \fR(deprecated)
+See keep-config-pulse.
 .TP
 \fBnodvd
 Disable DVD and audio CD devices.
 .TP
 \fBnogroups
 Disable supplementary user groups
+.TP
+\fBnoinput
+Disable input devices.
 .TP
 \fBnosound
 Disable sound system.
@@ -667,6 +751,9 @@ Disable U2F devices.
 .TP
 \fBnovideo
 Disable video capture devices.
+.TP
+\fBmachine-id
+Spoof id number in /etc/machine-id file - a new random id is generated inside the sandbox.
 .TP
 \fBshell none
 Run the program directly, without a shell.
@@ -786,8 +873,8 @@ a DHCP client and releasing the lease manually.
 
 .TP
 \fBiprange address,address
-Assign  an  IP address in the provided range to the last network
-interface defined by  a  net command.  A  default  gateway  is assigned by default.
+Assign an IP address in the provided range to the last network
+interface defined by a net command.  A default gateway is assigned by default.
 .br
 
 .br
@@ -803,10 +890,6 @@ iprange 192.168.1.150,192.168.1.160
 .TP
 \fBmac address
 Assign MAC addresses to the last network interface defined by a net command.
-
-.TP
-\fBmachine-id
-Spoof id number in /etc/machine-id file - a new random id is generated inside the sandbox.
 
 .TP
 \fBmtu number
@@ -882,7 +965,21 @@ Join the sandbox identified by name or start a new one.
 Same as "firejail --join=sandboxname" command if sandbox with specified name exists, otherwise same as "name sandboxname".
 
 .SH FILES
-/etc/firejail/filename.profile, $HOME/.config/firejail/filename.profile
+.TP
+\fB/etc/firejail/appname.profile
+Global Firejail configuration consisting mainly of profiles for each application supported by default.
+
+.TP
+\fB$HOME/.config/firejail/appname.profile
+User application profiles, will take precedence over the global profiles.
+
+.TP
+\fB/usr/share/doc/firejail/profile.template
+Template for building new profiles.
+
+.TP
+\fB/usr/share/doc/firejail/redirect_alias-profile.template
+Template for aliasing/redirecting profiles.
 
 .SH LICENSE
 Firejail is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation; either version 2 of the License, or (at your option) any later version.
@@ -894,7 +991,7 @@ Homepage: https://firejail.wordpress.com
 .BR firecfg (1),
 .BR firejail-login (5),
 .BR firejail-users (5),
-.BR jailtest (1)
+.BR jailcheck (1)
 
 .UR https://github.com/netblue30/firejail/wiki/Creating-Profiles
 .UE

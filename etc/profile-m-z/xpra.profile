@@ -22,7 +22,6 @@ include allow-python3.inc
 include disable-common.inc
 include disable-devel.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 whitelist /var/lib/xkb
@@ -33,6 +32,7 @@ caps.drop all
 # xpra needs to be allowed access to the abstract Unix socket namespace.
 nodvd
 nogroups
+noinput
 nonewprivs
 # In noroot mode, xpra cannot create a socket in the real /tmp/.X11-unix.
 #noroot

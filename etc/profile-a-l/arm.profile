@@ -16,7 +16,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/.arm
@@ -29,6 +28,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -43,6 +43,6 @@ tracelog
 disable-mnt
 private-bin arm,bash,ldconfig,lsof,ps,python*,sh,tor
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,passwd,pki,ssl,tor
+private-etc alternatives,ca-certificates,crypto-policies,ld.so.preload,passwd,pki,ssl,tor
 private-tmp
 

@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-write-mnt.inc
@@ -31,6 +30,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -47,7 +47,7 @@ disable-mnt
 private-bin qrencode
 private-cache
 private-dev
-private-etc none
+private-etc ld.so.preload,none
 private-lib libpcre*
 private-tmp
 

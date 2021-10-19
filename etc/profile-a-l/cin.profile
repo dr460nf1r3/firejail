@@ -11,7 +11,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 caps.drop all
@@ -19,13 +18,14 @@ ipc-namespace
 net none
 nodvd
 #nogroups
+noinput
 nonewprivs
 notv
 nou2f
 noroot
 protocol unix
 
-# if an 1-1.2% gap per thread hurts you, comment seccomp
+# If a 1-1.2% gap per thread hurts you, add 'ignore seccomp' to your cin.local.
 seccomp
 shell none
 

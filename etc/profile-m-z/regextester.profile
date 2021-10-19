@@ -9,16 +9,14 @@ include globals.local
 include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
-include disable-passwdmgr.inc
 include disable-interpreters.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
 
 whitelist /usr/share/com.github.artemanufrij.regextester
-include whitelist-usr-share-common.inc
-
 include whitelist-common.inc
+include whitelist-usr-share-common.inc
 include whitelist-var-common.inc
 
 apparmor
@@ -29,6 +27,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -44,15 +43,13 @@ disable-mnt
 private-bin regextester
 private-cache
 private-dev
-private-etc alternatives,fonts
+private-etc alternatives,fonts,ld.so.preload
 private-lib libgranite.so.*
 private-tmp
 
-# makes settings immutable
-# dbus-user none
-# dbus-system none
-
-memory-deny-write-execute
+dbus-user filter
+dbus-user.talk ca.desrt.dconf
+dbus-system none
 
 # never write anything
 read-only ${HOME}

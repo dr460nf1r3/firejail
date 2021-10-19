@@ -16,7 +16,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -32,6 +31,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -47,7 +47,7 @@ private-bin electrum,python*
 private-cache
 ?HAS_APPIMAGE: ignore private-dev
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,dconf,fonts,machine-id,pki,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,dconf,fonts,ld.so.preload,machine-id,pki,resolv.conf,ssl
 private-tmp
 
 # dbus-user none

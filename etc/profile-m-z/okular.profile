@@ -23,15 +23,20 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
 
-whitelist /usr/share/config.kcfg
+whitelist /usr/share/config.kcfg/gssettings.kcfg
+whitelist /usr/share/config.kcfg/pdfsettings.kcfg
+whitelist /usr/share/config.kcfg/okular.kcfg
+whitelist /usr/share/config.kcfg/okular_core.kcfg
+whitelist /usr/share/ghostscript
+whitelist /usr/share/kconf_update/okular.upd
 whitelist /usr/share/kxmlgui5/okular
 whitelist /usr/share/okular
 whitelist /usr/share/poppler
+include whitelist-runuser-common.inc
 include whitelist-usr-share-common.inc
 include whitelist-var-common.inc
 
@@ -42,6 +47,7 @@ machine-id
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -55,7 +61,7 @@ tracelog
 
 private-bin kbuildsycoca4,kdeinit4,lpr,okular,unar,unrar
 private-dev
-private-etc alternatives,cups,fonts,kde4rc,kde5rc,ld.so.cache,machine-id,passwd,xdg
+private-etc alternatives,cups,fonts,kde4rc,kde5rc,ld.so.cache,ld.so.preload,machine-id,passwd,xdg
 # private-tmp - on KDE we need access to the real /tmp for data exchange with email clients
 
 # dbus-user none

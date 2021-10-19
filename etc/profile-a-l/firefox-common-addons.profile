@@ -2,6 +2,7 @@
 # Persistent customizations should go in a .local file.
 include firefox-common-addons.local
 
+ignore whitelist ${RUNUSER}/*firefox*
 ignore include whitelist-runuser-common.inc
 ignore private-cache
 
@@ -73,8 +74,9 @@ whitelist /usr/share/vulkan
 # GNOME Shell integration (chrome-gnome-shell) needs dbus and python
 noblacklist ${HOME}/.local/share/gnome-shell
 whitelist ${HOME}/.local/share/gnome-shell
-ignore dbus-user none
-ignore dbus-system none
+dbus-user.talk ca.desrt.dconf
+dbus-user.talk org.gnome.ChromeGnomeShell
+dbus-user.talk org.gnome.Shell
 # Allow python (blacklisted by disable-interpreters.inc)
 include allow-python3.inc
 

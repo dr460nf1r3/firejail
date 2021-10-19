@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -33,6 +32,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -49,7 +49,7 @@ disable-mnt
 private-bin gget
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,pki,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,ld.so.preload,pki,resolv.conf,ssl
 private-lib
 private-tmp
 

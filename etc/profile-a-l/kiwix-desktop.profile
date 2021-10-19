@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -31,6 +30,7 @@ netfilter
 # no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 # nosound
@@ -44,7 +44,7 @@ shell none
 disable-mnt
 private-cache
 private-dev
-private-etc alsa,alternatives,asound.conf,ca-certificates,crypto-policies,fonts,hostname,hosts,ld.so.cache,machine-id,pki,pulse,resolv.conf,ssl
+private-etc alsa,alternatives,asound.conf,ca-certificates,crypto-policies,fonts,hostname,hosts,ld.so.cache,ld.so.preload,machine-id,pki,pulse,resolv.conf,ssl
 private-tmp
 
 dbus-user none

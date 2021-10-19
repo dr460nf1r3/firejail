@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -22,6 +21,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -34,7 +34,7 @@ tracelog
 
 private-bin bash,jerry,sh,stockfish
 private-dev
-private-etc fonts,gtk-2.0,gtk-3.0
+private-etc fonts,gtk-2.0,gtk-3.0,ld.so.preload
 private-tmp
 
 dbus-user none

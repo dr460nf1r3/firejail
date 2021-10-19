@@ -15,7 +15,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -32,15 +31,15 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
 notv
 nou2f
 novideo
-# protocol can be empty, but this is not yet supported see #639
-protocol inet
-seccomp
+# block the socket syscall to simulate an be empty protocol line, see #639
+seccomp socket
 shell none
 tracelog
 x11 none
@@ -48,7 +47,7 @@ x11 none
 private-bin pngquant
 private-cache
 private-dev
-private-etc alternatives
+private-etc alternatives,ld.so.preload
 private-tmp
 
 dbus-user none

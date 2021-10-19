@@ -22,6 +22,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <dirent.h>
+#include <limits.h>
 
 typedef struct env_t {
 	struct env_t *next;
@@ -59,12 +60,7 @@ void env_ibus_load(void) {
 	if (asprintf(&dirname, "%s/.config/ibus/bus", cfg.homedir) == -1)
 		errExit("asprintf");
 
-	struct stat s;
-	if (stat(dirname, &s) == -1)
-		return;
-
 	// find the file
-	/* coverity[toctou] */
 	DIR *dir = opendir(dirname);
 	if (!dir) {
 		free(dirname);
@@ -84,7 +80,7 @@ void env_ibus_load(void) {
 		char *fname;
 		if (asprintf(&fname, "%s/%s", dirname, entry->d_name) == -1)
 			errExit("asprintf");
-		FILE *fp = fopen(fname, "r");
+		FILE *fp = fopen(fname, "re");
 		free(fname);
 		if (!fp)
 			continue;
@@ -267,7 +263,7 @@ static const char * const env_whitelist[] = {
 	"LANG",
 	"LANGUAGE",
 	"LC_MESSAGES",
-	"PATH",
+	// "PATH",
 	"DISPLAY"	// required by X11
 };
 
@@ -316,6 +312,10 @@ void env_apply_whitelist(void) {
 		errExit("clearenv");
 
 	env_apply_list(env_whitelist, ARRAY_SIZE(env_whitelist));
+
+	// hardcoding PATH
+	if (setenv("PATH", "/usr/local/bin:/usr/bin:/bin:/usr/local/sbin:/usr/sbin:/sbin", 1) < 0)
+		errExit("setenv");
 }
 
 // Filter env variables for a sbox app

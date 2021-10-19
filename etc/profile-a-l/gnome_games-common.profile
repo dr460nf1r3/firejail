@@ -10,7 +10,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -26,6 +25,7 @@ machine-id
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -41,7 +41,7 @@ tracelog
 disable-mnt
 private-cache
 private-dev
-private-etc dconf,fonts,gconf,gtk-2.0,gtk-3.0,machine-id,pango,passwd,X11
+private-etc dconf,fonts,gconf,gtk-2.0,gtk-3.0,ld.so.preload,machine-id,pango,passwd,X11
 private-tmp
 
 dbus-user filter

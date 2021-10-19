@@ -11,7 +11,7 @@ include globals.local
 # edit ~/.config/mpv/foobar.conf:
 #    screenshot-directory=~/Pictures
 
-# Mpv has a powerfull lua-API, some off these lua-scripts interact
+# Mpv has a powerful lua-API, some off these lua-scripts interact
 # with external resources which are blocked by firejail. In such cases
 # you need to allow these resources by
 #  - adding additional binaries to private-bin
@@ -35,11 +35,12 @@ include allow-lua.inc
 include allow-python2.inc
 include allow-python3.inc
 
+blacklist /usr/libexec
+
 include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 
@@ -63,6 +64,7 @@ caps.drop all
 netfilter
 # nogroups seems to cause issues with Nvidia drivers sometimes
 nogroups
+noinput
 nonewprivs
 noroot
 nou2f

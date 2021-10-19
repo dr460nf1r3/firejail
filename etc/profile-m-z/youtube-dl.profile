@@ -27,7 +27,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -43,6 +42,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -58,7 +58,7 @@ tracelog
 private-bin env,ffmpeg,python*,youtube-dl
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,hostname,hosts,ld.so.cache,mime.types,pki,resolv.conf,ssl,youtube-dl.conf
+private-etc alternatives,ca-certificates,crypto-policies,hostname,hosts,ld.so.cache,ld.so.preload,mime.types,pki,resolv.conf,ssl,youtube-dl.conf
 private-tmp
 
 dbus-user none

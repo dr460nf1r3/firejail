@@ -86,7 +86,7 @@ int seccomp_install_filters(void) {
 static void seccomp_save_file_list(const char *fname) {
 	assert(fname);
 
-	FILE *fp = fopen(RUN_SECCOMP_LIST, "a+");
+	FILE *fp = fopen(RUN_SECCOMP_LIST, "ae");
 	if (!fp)
 		errExit("fopen");
 
@@ -99,7 +99,7 @@ static void seccomp_save_file_list(const char *fname) {
 #define MAXBUF 4096
 static int load_file_list_flag = 0;
 void seccomp_load_file_list(void) {
-	FILE *fp = fopen(RUN_SECCOMP_LIST, "r");
+	FILE *fp = fopen(RUN_SECCOMP_LIST, "re");
 	if (!fp)
 		return; // no seccomp configuration whatsoever
 
@@ -122,7 +122,7 @@ int seccomp_load(const char *fname) {
 	assert(fname);
 
 	// open filter file
-	int fd = open(fname, O_RDONLY);
+	int fd = open(fname, O_RDONLY|O_CLOEXEC);
 	if (fd == -1)
 		goto errexit;
 
@@ -208,7 +208,8 @@ int seccomp_filter_drop(bool native) {
 	//	- seccomp
 	if (cfg.seccomp_list_drop == NULL) {
 		// default seccomp if error action is not changed
-		if (cfg.seccomp_list == NULL && arg_seccomp_error_action == DEFAULT_SECCOMP_ERROR_ACTION) {
+		if ((cfg.seccomp_list == NULL || cfg.seccomp_list[0] == '\0')
+		    && arg_seccomp_error_action == DEFAULT_SECCOMP_ERROR_ACTION) {
 			if (arg_seccomp_block_secondary)
 				seccomp_filter_block_secondary();
 			else {
@@ -261,7 +262,7 @@ int seccomp_filter_drop(bool native) {
 			}
 
 			// build the seccomp filter as a regular user
-			if (list)
+			if (list && list[0])
 				if (arg_allow_debuggers)
 					rv = sbox_run(SBOX_USER | SBOX_CAPS_NONE | SBOX_SECCOMP, 7,
 						      PATH_FSECCOMP, command, "drop", filter, postexec_filter, list, "allow-debuggers");
@@ -438,7 +439,7 @@ void seccomp_print_filter(pid_t pid) {
 	if (stat(fname, &s) == -1)
 		goto errexit;
 
-	FILE *fp = fopen(fname, "r");
+	FILE *fp = fopen(fname, "re");
 	if (!fp)
 		goto errexit;
 	free(fname);

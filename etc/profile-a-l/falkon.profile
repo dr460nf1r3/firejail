@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -33,6 +32,7 @@ caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -46,7 +46,7 @@ disable-mnt
 # private-bin falkon
 private-cache
 private-dev
-private-etc adobe,alternatives,asound.conf,ati,ca-certificates,crypto-policies,dconf,drirc,fonts,group,gtk-2.0,gtk-3.0,hostname,hosts,localtime,machine-id,mailcap,mime.types,nsswitch.conf,pango,passwd,pki,pulse,resolv.conf,selinux,ssl,xdg
+private-etc adobe,alternatives,asound.conf,ati,ca-certificates,crypto-policies,dconf,drirc,fonts,group,gtk-2.0,gtk-3.0,hostname,hosts,ld.so.preload,localtime,machine-id,mailcap,mime.types,nsswitch.conf,pango,passwd,pki,pulse,resolv.conf,selinux,ssl,xdg
 private-tmp
 
 # dbus-user filter

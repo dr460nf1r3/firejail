@@ -25,6 +25,7 @@ caps.drop all
 # Xvfb needs to be allowed access to the abstract Unix socket namespace.
 nodvd
 nogroups
+noinput
 nonewprivs
 # In noroot mode, Xvfb cannot create a socket in the real /tmp/.X11-unix.
 #noroot
@@ -42,5 +43,5 @@ private
 # private-bin sh,xkbcomp,Xvfb
 # private-bin bash,cat,ls,sh,strace,xkbcomp,Xvfb
 private-dev
-private-etc alternatives,gai.conf,host.conf,hostname,hosts,ld.so.cache,ld.so.conf,nsswitch.conf,resolv.conf
+private-etc alternatives,gai.conf,host.conf,hostname,hosts,ld.so.cache,ld.so.conf,ld.so.preload,nsswitch.conf,resolv.conf
 private-tmp

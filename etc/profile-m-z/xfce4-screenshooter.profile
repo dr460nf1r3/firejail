@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -29,6 +28,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -42,7 +42,7 @@ tracelog
 disable-mnt
 private-bin xfce4-screenshooter,xfconf-query
 private-dev
-private-etc ca-certificates,crypto-policies,dconf,fonts,gtk-3.0,pki,resolv.conf,ssl
+private-etc ca-certificates,crypto-policies,dconf,fonts,gtk-3.0,ld.so.preload,pki,resolv.conf,ssl
 private-tmp
 
 dbus-user none

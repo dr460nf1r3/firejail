@@ -13,7 +13,6 @@ noblacklist ${HOME}/.local/share/wesnoth
 include disable-common.inc
 include disable-devel.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/.cache/wesnoth
@@ -26,6 +25,7 @@ include whitelist-common.inc
 
 caps.drop all
 nodvd
+noinput
 nonewprivs
 noroot
 notv

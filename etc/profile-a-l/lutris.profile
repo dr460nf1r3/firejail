@@ -14,6 +14,10 @@ noblacklist ${HOME}/.config/lutris
 noblacklist ${HOME}/.local/share/lutris
 # noblacklist ${HOME}/.wine
 noblacklist /tmp/.wine-*
+# Don't block access to /sbin and /usr/sbin to allow using ldconfig. Otherwise
+# Lutris won't even start.
+noblacklist /sbin
+noblacklist /usr/sbin
 
 ignore noexec ${HOME}
 
@@ -25,7 +29,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -70,5 +73,7 @@ shell none
 #private-dev
 private-tmp
 
-dbus-user none
+dbus-user filter
+dbus-user.own net.lutris.Lutris
+dbus-user.talk com.feralinteractive.GameMode
 dbus-system none

@@ -11,7 +11,6 @@ blacklist ${RUNUSER}
 
 include disable-common.inc
 include disable-exec.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 apparmor
@@ -23,6 +22,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 nosound
 notv

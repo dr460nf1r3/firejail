@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -31,6 +30,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -44,5 +44,5 @@ disable-mnt
 private-bin locale,zulip
 private-cache
 private-dev
-private-etc asound.conf,fonts,machine-id
+private-etc asound.conf,fonts,ld.so.preload,machine-id
 private-tmp

@@ -16,7 +16,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 
@@ -29,6 +28,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -43,7 +43,7 @@ tracelog
 private-bin viewnior
 private-cache
 private-dev
-private-etc alternatives,fonts,machine-id
+private-etc alternatives,fonts,ld.so.preload,machine-id
 private-tmp
 
 dbus-user none

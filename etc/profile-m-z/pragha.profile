@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -23,6 +22,7 @@ caps.drop all
 netfilter
 no3d
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -33,6 +33,6 @@ seccomp
 shell none
 
 private-dev
-private-etc alternatives,asound.conf,ca-certificates,crypto-policies,fonts,gtk-3.0,host.conf,hostname,hosts,machine-id,pki,pulse,resolv.conf,ssl,xdg
+private-etc alternatives,asound.conf,ca-certificates,crypto-policies,fonts,gtk-3.0,host.conf,hostname,hosts,ld.so.preload,machine-id,pki,pulse,resolv.conf,ssl,xdg
 private-tmp
 

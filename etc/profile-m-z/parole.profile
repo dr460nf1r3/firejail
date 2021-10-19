@@ -12,7 +12,6 @@ noblacklist ${VIDEOS}
 include disable-common.inc
 include disable-devel.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -28,4 +27,4 @@ shell none
 
 private-bin dbus-launch,parole
 private-cache
-private-etc alternatives,asound.conf,ca-certificates,crypto-policies,fonts,group,machine-id,passwd,pki,pulse,ssl
+private-etc alternatives,asound.conf,ca-certificates,crypto-policies,fonts,group,ld.so.preload,machine-id,passwd,pki,pulse,ssl

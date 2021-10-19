@@ -13,11 +13,12 @@ noblacklist ${HOME}/*.kdbx
 # Allow python (blacklisted by disable-interpreters.inc)
 include allow-python3.inc
 
+blacklist /usr/libexec
+
 include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -35,6 +36,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -51,7 +53,7 @@ disable-mnt
 private-bin gnome-passwordsafe,python3*
 private-cache
 private-dev
-private-etc dconf,fonts,gtk-3.0,passwd
+private-etc dconf,fonts,gtk-3.0,ld.so.preload,passwd
 private-tmp
 
 dbus-user filter

@@ -19,7 +19,6 @@
 */
 #include "firejail.h"
 #include <sys/mount.h>
-#include <linux/limits.h>
 #include <dirent.h>
 #include <errno.h>
 #include <sys/stat.h>
@@ -34,24 +33,24 @@
 #define O_PATH 010000000
 #endif
 
-static void skel(const char *homedir, uid_t u, gid_t g) {
-	char *fname;
+static void skel(const char *homedir) {
+	EUID_ASSERT();
 
 	// zsh
 	if (!arg_shell_none && (strcmp(cfg.shell,"/usr/bin/zsh") == 0 || strcmp(cfg.shell,"/bin/zsh") == 0)) {
 		// copy skel files
+		char *fname;
 		if (asprintf(&fname, "%s/.zshrc", homedir) == -1)
 			errExit("asprintf");
-		struct stat s;
 		// don't copy it if we already have the file
-		if (stat(fname, &s) == 0)
+		if (access(fname, F_OK) == 0)
 			return;
-		if (is_link(fname)) { // stat on dangling symlinks fails, try again using lstat
+		if (is_link(fname)) { // access(3) on dangling symlinks fails, try again using lstat
 			fprintf(stderr, "Error: invalid %s file\n", fname);
 			exit(1);
 		}
-		if (stat("/etc/skel/.zshrc", &s) == 0) {
-			copy_file_as_user("/etc/skel/.zshrc", fname, u, g, 0644); // regular user
+		if (access("/etc/skel/.zshrc", R_OK) == 0) {
+			copy_file_as_user("/etc/skel/.zshrc", fname, 0644); // regular user
 			fs_logger("clone /etc/skel/.zshrc");
 			fs_logger2("clone", fname);
 		}
@@ -65,19 +64,18 @@ static void skel(const char *homedir, uid_t u, gid_t g) {
 	// csh
 	else if (!arg_shell_none && strcmp(cfg.shell,"/bin/csh") == 0) {
 		// copy skel files
+		char *fname;
 		if (asprintf(&fname, "%s/.cshrc", homedir) == -1)
 			errExit("asprintf");
-		struct stat s;
-
 		// don't copy it if we already have the file
-		if (stat(fname, &s) == 0)
+		if (access(fname, F_OK) == 0)
 			return;
-		if (is_link(fname)) { // stat on dangling symlinks fails, try again using lstat
+		if (is_link(fname)) { // access(3) on dangling symlinks fails, try again using lstat
 			fprintf(stderr, "Error: invalid %s file\n", fname);
 			exit(1);
 		}
-		if (stat("/etc/skel/.cshrc", &s) == 0) {
-			copy_file_as_user("/etc/skel/.cshrc", fname, u, g, 0644); // regular user
+		if (access("/etc/skel/.cshrc", R_OK) == 0) {
+			copy_file_as_user("/etc/skel/.cshrc", fname, 0644); // regular user
 			fs_logger("clone /etc/skel/.cshrc");
 			fs_logger2("clone", fname);
 		}
@@ -91,18 +89,18 @@ static void skel(const char *homedir, uid_t u, gid_t g) {
 	// bash etc.
 	else {
 		// copy skel files
+		char *fname;
 		if (asprintf(&fname, "%s/.bashrc", homedir) == -1)
 			errExit("asprintf");
-		struct stat s;
 		// don't copy it if we already have the file
-		if (stat(fname, &s) == 0)
+		if (access(fname, F_OK) == 0)
 			return;
-		if (is_link(fname)) { // stat on dangling symlinks fails, try again using lstat
+		if (is_link(fname)) { // access(3) on dangling symlinks fails, try again using lstat
 			fprintf(stderr, "Error: invalid %s file\n", fname);
 			exit(1);
 		}
-		if (stat("/etc/skel/.bashrc", &s) == 0) {
-			copy_file_as_user("/etc/skel/.bashrc", fname, u, g, 0644); // regular user
+		if (access("/etc/skel/.bashrc", R_OK) == 0) {
+			copy_file_as_user("/etc/skel/.bashrc", fname, 0644); // regular user
 			fs_logger("clone /etc/skel/.bashrc");
 			fs_logger2("clone", fname);
 		}
@@ -112,6 +110,7 @@ static void skel(const char *homedir, uid_t u, gid_t g) {
 }
 
 static int store_xauthority(void) {
+	EUID_ASSERT();
 	if (arg_x11_block)
 		return 0;
 
@@ -122,15 +121,16 @@ static int store_xauthority(void) {
 		errExit("asprintf");
 
 	struct stat s;
-	if (stat(src, &s) == 0) {
-		if (is_link(src)) {
+	if (lstat(src, &s) == 0) {
+		if (S_ISLNK(s.st_mode)) {
 			fwarning("invalid .Xauthority file\n");
 			free(src);
 			return 0;
 		}
 
 		// create an empty file as root, and change ownership to user
-		FILE *fp = fopen(dest, "w");
+		EUID_ROOT();
+		FILE *fp = fopen(dest, "we");
 		if (fp) {
 			fprintf(fp, "\n");
 			SET_PERMS_STREAM(fp, getuid(), getgid(), 0600);
@@ -138,10 +138,11 @@ static int store_xauthority(void) {
 		}
 		else
 			errExit("fopen");
+		EUID_USER();
 
-		copy_file_as_user(src, dest, getuid(), getgid(), 0600); // regular user
-		fs_logger2("clone", dest);
+		copy_file_as_user(src, dest, 0600); // regular user
 		selinux_relabel_path(dest, src);
+		fs_logger2("clone", dest);
 		free(src);
 		return 1; // file copied
 	}
@@ -151,6 +152,7 @@ static int store_xauthority(void) {
 }
 
 static int store_asoundrc(void) {
+	EUID_ASSERT();
 	if (arg_nosound)
 		return 0;
 
@@ -161,11 +163,11 @@ static int store_asoundrc(void) {
 		errExit("asprintf");
 
 	struct stat s;
-	if (stat(src, &s) == 0) {
-		if (is_link(src)) {
+	if (lstat(src, &s) == 0) {
+		if (S_ISLNK(s.st_mode)) {
 			// make sure the real path of the file is inside the home directory
 			/* coverity[toctou] */
-			char* rp = realpath(src, NULL);
+			char *rp = realpath(src, NULL);
 			if (!rp) {
 				fprintf(stderr, "Error: Cannot access %s\n", src);
 				exit(1);
@@ -178,7 +180,8 @@ static int store_asoundrc(void) {
 		}
 
 		// create an empty file as root, and change ownership to user
-		FILE *fp = fopen(dest, "w");
+		EUID_ROOT();
+		FILE *fp = fopen(dest, "we");
 		if (fp) {
 			fprintf(fp, "\n");
 			SET_PERMS_STREAM(fp, getuid(), getgid(), 0644);
@@ -186,10 +189,11 @@ static int store_asoundrc(void) {
 		}
 		else
 			errExit("fopen");
+		EUID_USER();
 
-		copy_file_as_user(src, dest, getuid(), getgid(), 0644); // regular user
-		selinux_relabel_path(dest, src);
+		copy_file_as_user(src, dest, 0644); // regular user
 		fs_logger2("clone", dest);
+		selinux_relabel_path(dest, src);
 		free(src);
 		return 1; // file copied
 	}
@@ -199,6 +203,7 @@ static int store_asoundrc(void) {
 }
 
 static void copy_xauthority(void) {
+	EUID_ASSERT();
 	// copy XAUTHORITY_FILE in the new home directory
 	char *src = RUN_XAUTHORITY_FILE ;
 	char *dest;
@@ -211,16 +216,18 @@ static void copy_xauthority(void) {
 		exit(1);
 	}
 
-	copy_file_as_user(src, dest, getuid(), getgid(), S_IRUSR | S_IWUSR); // regular user
-	selinux_relabel_path(dest, src);
+	copy_file_as_user(src, dest, S_IRUSR | S_IWUSR); // regular user
 	fs_logger2("clone", dest);
+	selinux_relabel_path(dest, dest);
 	free(dest);
 
-	// delete the temporary file
-	unlink(src);
+	EUID_ROOT();
+	unlink(src); // delete the temporary file
+	EUID_USER();
 }
 
 static void copy_asoundrc(void) {
+	EUID_ASSERT();
 	// copy ASOUNDRC_FILE in the new home directory
 	char *src = RUN_ASOUNDRC_FILE ;
 	char *dest;
@@ -233,12 +240,14 @@ static void copy_asoundrc(void) {
 		exit(1);
 	}
 
-	copy_file_as_user(src, dest, getuid(), getgid(), S_IRUSR | S_IWUSR); // regular user
+	copy_file_as_user(src, dest, S_IRUSR | S_IWUSR); // regular user
 	fs_logger2("clone", dest);
+	selinux_relabel_path(dest, dest);
 	free(dest);
 
-	// delete the temporary file
-	unlink(src);
+	EUID_ROOT();
+	unlink(src); // delete the temporary file
+	EUID_USER();
 }
 
 // private mode (--private=homedir):
@@ -251,21 +260,22 @@ void fs_private_homedir(void) {
 	char *private_homedir = cfg.home_private;
 	assert(homedir);
 	assert(private_homedir);
+	EUID_ASSERT();
+
+	uid_t u = getuid();
+	// gid_t g = getgid();
 
 	int xflag = store_xauthority();
 	int aflag = store_asoundrc();
-
-	uid_t u = getuid();
-	gid_t g = getgid();
 
 	// mount bind private_homedir on top of homedir
 	if (arg_debug)
 		printf("Mount-bind %s on top of %s\n", private_homedir, homedir);
 	// get file descriptors for homedir and private_homedir, fails if there is any symlink
-	int src = safe_fd(private_homedir, O_PATH|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);
+	int src = safer_openat(-1, private_homedir, O_PATH|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);
 	if (src == -1)
 		errExit("opening private directory");
-	int dst = safe_fd(homedir, O_PATH|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);
+	int dst = safer_openat(-1, homedir, O_PATH|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);
 	if (dst == -1)
 		errExit("opening home directory");
 	// both mount source and target should be owned by the user
@@ -286,17 +296,11 @@ void fs_private_homedir(void) {
 		exit(1);
 	}
 	// mount via the links in /proc/self/fd
-	char *proc_src, *proc_dst;
-	if (asprintf(&proc_src, "/proc/self/fd/%d", src) == -1)
-		errExit("asprintf");
-	if (asprintf(&proc_dst, "/proc/self/fd/%d", dst) == -1)
-		errExit("asprintf");
-	if (mount(proc_src, proc_dst, NULL, MS_NOSUID | MS_NODEV | MS_BIND | MS_REC, NULL) < 0)
+	EUID_ROOT();
+	if (bind_mount_by_fd(src, dst))
 		errExit("mount bind");
-	free(proc_src);
-	free(proc_dst);
-	close(src);
-	close(dst);
+	EUID_USER();
+
 	// check /proc/self/mountinfo to confirm the mount is ok
 	MountData *mptr = get_last_mount();
 	size_t len = strlen(homedir);
@@ -304,6 +308,8 @@ void fs_private_homedir(void) {
 	   (*(mptr->dir + len) != '\0' && *(mptr->dir + len) != '/'))
 		errLogExit("invalid private mount");
 
+	close(src);
+	close(dst);
 	fs_logger3("mount-bind", private_homedir, homedir);
 	fs_logger2("whitelist", homedir);
 // preserve mode and ownership
@@ -312,6 +318,7 @@ void fs_private_homedir(void) {
 //	if (chmod(homedir, s.st_mode) == -1)
 //		errExit("mount-bind chmod");
 
+	EUID_ROOT();
 	if (u != 0) {
 		// mask /root
 		if (arg_debug)
@@ -330,8 +337,9 @@ void fs_private_homedir(void) {
 		selinux_relabel_path("/home", "/home");
 		fs_logger("tmpfs /home");
 	}
+	EUID_USER();
 
-	skel(homedir, u, g);
+	skel(homedir);
 	if (xflag)
 		copy_xauthority();
 	if (aflag)
@@ -346,12 +354,15 @@ void fs_private_homedir(void) {
 void fs_private(void) {
 	char *homedir = cfg.homedir;
 	assert(homedir);
+	EUID_ASSERT();
+
 	uid_t u = getuid();
 	gid_t g = getgid();
 
 	int xflag = store_xauthority();
 	int aflag = store_asoundrc();
 
+	EUID_ROOT();
 	// mask /root
 	if (arg_debug)
 		printf("Mounting a new /root directory\n");
@@ -383,19 +394,22 @@ void fs_private(void) {
 			}
 			if (chown(homedir, u, g) < 0)
 				errExit("chown");
-
 			fs_logger2("mkdir", homedir);
 			fs_logger2("tmpfs", homedir);
 		}
-		else
+		else {
 			// mask user home directory
 			// the directory should be owned by the current user
+			EUID_USER();
 			fs_tmpfs(homedir, 1);
+			EUID_ROOT();
+		}
 
 		selinux_relabel_path(homedir, homedir);
 	}
+	EUID_USER();
 
-	skel(homedir, u, g);
+	skel(homedir);
 	if (xflag)
 		copy_xauthority();
 	if (aflag)
@@ -438,6 +452,7 @@ void fs_check_private_cwd(const char *dir) {
 // --private-home
 //***********************************************************************************
 static char *check_dir_or_file(const char *name) {
+	EUID_ASSERT();
 	assert(name);
 
 	// basic checks
@@ -498,6 +513,7 @@ errexit:
 }
 
 static void duplicate(char *name) {
+	EUID_ASSERT();
 	char *fname = check_dir_or_file(name);
 
 	if (arg_debug)
@@ -535,28 +551,32 @@ static void duplicate(char *name) {
 // 	set skel files,
 // 	restore .Xauthority
 void fs_private_home_list(void) {
-	timetrace_start();
-
 	char *homedir = cfg.homedir;
 	char *private_list = cfg.home_private_keep;
 	assert(homedir);
 	assert(private_list);
+	EUID_ASSERT();
 
-	int xflag = store_xauthority();
-	int aflag = store_asoundrc();
+	timetrace_start();
 
 	uid_t uid = getuid();
 	gid_t gid = getgid();
 
+	int xflag = store_xauthority();
+	int aflag = store_asoundrc();
+
+	EUID_ROOT();
 	// create /run/firejail/mnt/home directory
 	mkdir_attr(RUN_HOME_DIR, 0755, uid, gid);
 	selinux_relabel_path(RUN_HOME_DIR, homedir);
-	fs_logger_print();	// save the current log
 
-	if (arg_debug)
-		printf("Copying files in the new home:\n");
+	// save the current log
+	fs_logger_print();
+	EUID_USER();
 
 	// copy the list of files in the new home directory
+	if (arg_debug)
+		printf("Copying files in the new home:\n");
 	char *dlist = strdup(cfg.home_private_keep);
 	if (!dlist)
 		errExit("strdup");
@@ -576,7 +596,7 @@ void fs_private_home_list(void) {
 	if (arg_debug)
 		printf("Mount-bind %s on top of %s\n", RUN_HOME_DIR, homedir);
 
-	int fd = safe_fd(homedir, O_PATH|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);
+	int fd = safer_openat(-1, homedir, O_PATH|O_DIRECTORY|O_NOFOLLOW|O_CLOEXEC);
 	if (fd == -1)
 		errExit("opening home directory");
 	// home directory should be owned by the user
@@ -589,24 +609,19 @@ void fs_private_home_list(void) {
 		exit(1);
 	}
 	// mount using the file descriptor
-	char *proc;
-	if (asprintf(&proc, "/proc/self/fd/%d", fd) == -1)
-		errExit("asprintf");
-	if (mount(RUN_HOME_DIR, proc, NULL, MS_BIND|MS_REC, NULL) < 0)
+	EUID_ROOT();
+	if (bind_mount_path_to_fd(RUN_HOME_DIR, fd))
 		errExit("mount bind");
-	free(proc);
+	EUID_USER();
 	close(fd);
+
 	// check /proc/self/mountinfo to confirm the mount is ok
 	MountData *mptr = get_last_mount();
 	if (strcmp(mptr->dir, homedir) != 0 || strcmp(mptr->fstype, "tmpfs") != 0)
 		errLogExit("invalid private-home mount");
 	fs_logger2("tmpfs", homedir);
 
-	// mask RUN_HOME_DIR, it is writable and not noexec
-	if (mount("tmpfs", RUN_HOME_DIR, "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME,  "mode=755,gid=0") < 0)
-		errExit("mounting tmpfs");
-	fs_logger2("tmpfs", RUN_HOME_DIR);
-
+	EUID_ROOT();
 	if (uid != 0) {
 		// mask /root
 		if (arg_debug)
@@ -626,7 +641,12 @@ void fs_private_home_list(void) {
 		fs_logger("tmpfs /home");
 	}
 
-	skel(homedir, uid, gid);
+	// mask RUN_HOME_DIR, it is writable and not noexec
+	if (mount("tmpfs", RUN_HOME_DIR, "tmpfs", MS_NOSUID | MS_NODEV | MS_STRICTATIME,  "mode=755,gid=0") < 0)
+		errExit("mounting tmpfs");
+	EUID_USER();
+
+	skel(homedir);
 	if (xflag)
 		copy_xauthority();
 	if (aflag)

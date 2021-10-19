@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -29,6 +28,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -42,7 +42,7 @@ tracelog
 private-bin mocp
 private-cache
 private-dev
-private-etc alternatives,asound.conf,ca-certificates,crypto-policies,group,machine-id,pki,pulse,resolv.conf,ssl
+private-etc alternatives,asound.conf,ca-certificates,crypto-policies,group,ld.so.preload,machine-id,pki,pulse,resolv.conf,ssl
 private-tmp
 
 dbus-user none

@@ -16,7 +16,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -26,6 +25,7 @@ caps.drop all
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -40,5 +40,5 @@ tracelog
 disable-mnt
 private-cache
 private-dev
-private-etc alsa,asound.conf,dconf,fonts,gtk-2.0,gtk-3.0,machine-id,openal,pango,pulse,xdg
+private-etc alsa,asound.conf,dconf,fonts,gtk-2.0,gtk-3.0,ld.so.preload,machine-id,openal,pango,pulse,xdg
 private-tmp

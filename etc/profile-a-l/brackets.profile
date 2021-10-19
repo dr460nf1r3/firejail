@@ -13,13 +13,13 @@ noblacklist ${HOME}/.config/Brackets
 include allow-common-devel.inc
 
 include disable-common.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound

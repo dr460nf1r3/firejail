@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -45,7 +44,7 @@ tracelog
 disable-mnt
 #private-bin gmpc
 private-cache
-private-etc alternatives,fonts
+private-etc alternatives,fonts,ld.so.preload
 private-tmp
 writable-run-user
 

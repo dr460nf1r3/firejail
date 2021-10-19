@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -31,6 +30,7 @@ machine-id
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -46,7 +46,7 @@ disable-mnt
 private-bin ktouch
 private-cache
 private-dev
-private-etc alternatives,fonts,kde5rc,machine-id
+private-etc alternatives,fonts,kde5rc,ld.so.preload,machine-id
 private-tmp
 
 dbus-user none

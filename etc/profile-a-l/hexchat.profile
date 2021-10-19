@@ -8,6 +8,9 @@ include globals.local
 
 noblacklist ${HOME}/.config/hexchat
 
+# Allow /bin/sh (blacklisted by disable-shell.inc)
+include allow-bin-sh.inc
+
 # Allow perl (blacklisted by disable-interpreters.inc)
 include allow-perl.inc
 
@@ -19,7 +22,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -35,6 +37,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -47,7 +50,7 @@ tracelog
 
 disable-mnt
 # debug note: private-bin requires perl, python, etc on some systems
-private-bin hexchat,python*
+private-bin hexchat,python*,sh
 private-dev
 #private-lib - python problems
 private-tmp

@@ -20,6 +20,7 @@
 #include "firejail.h"
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <errno.h>
 #include <unistd.h>
 #include <grp.h>
 
@@ -47,7 +48,8 @@ int check_namespace_virt(void) {
 
 	// check PID 1 container environment variable
 	EUID_ROOT();
-	FILE *fp = fopen("/proc/1/environ", "r");
+	FILE *fp = fopen("/proc/1/environ", "re");
+	EUID_USER();
 	if (fp) {
 		int c = 0;
 		while (c != EOF) {
@@ -68,7 +70,6 @@ int check_namespace_virt(void) {
 				// found it
 				if (is_container(buf + 10)) {
 					fclose(fp);
-					EUID_USER();
 					return 1;
 				}
 			}
@@ -78,7 +79,6 @@ int check_namespace_virt(void) {
 		fclose(fp);
 	}
 
-	EUID_USER();
 	return 0;
 }
 
@@ -105,20 +105,15 @@ int check_kernel_procs(void) {
 	// look at the first 10 processes
 	// if a kernel process is found, return 1
 	for (i = 1; i <= 10; i++) {
-		struct stat s;
 		char *fname;
 		if (asprintf(&fname, "/proc/%d/comm", i) == -1)
 			errExit("asprintf");
-		if (stat(fname, &s) == -1) {
-			free(fname);
-			continue;
-		}
 
 		// open file
-		/* coverity[toctou] */
-		FILE *fp = fopen(fname, "r");
+		FILE *fp = fopen(fname, "re");
 		if (!fp) {
-			fwarning("cannot open %s\n", fname);
+			if (errno != ENOENT)
+				fwarning("cannot open %s\n", fname);
 			free(fname);
 			continue;
 		}
@@ -208,7 +203,7 @@ void run_no_sandbox(int argc, char **argv) {
 		// force --shell=none in order to not break firecfg symbolic links
 		arg_shell_none = 1;
 
-		build_cmdline(&cfg.command_line, &cfg.window_title, argc, argv, prog_index);
+		build_cmdline(&cfg.command_line, &cfg.window_title, argc, argv, prog_index, true);
 	}
 
 	fwarning("an existing sandbox was detected. "

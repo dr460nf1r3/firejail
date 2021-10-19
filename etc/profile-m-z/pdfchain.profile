@@ -11,7 +11,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -22,6 +21,7 @@ ipc-namespace
 net none
 no3d
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -34,7 +34,7 @@ shell none
 
 private-bin pdfchain,pdftk,sh
 private-dev
-private-etc alternatives,dconf,fonts,gtk-3.0,xdg
+private-etc alternatives,dconf,fonts,gtk-3.0,ld.so.preload,xdg
 private-tmp
 
 dbus-user none

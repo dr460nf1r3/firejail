@@ -58,16 +58,18 @@ static char *usage_str =
 #ifdef HAVE_DBUSPROXY
 	"    --dbus-log=file - set DBus log file location.\n"
 	"    --dbus-system=filter|none - set system DBus access policy.\n"
-	"    --dbus-system.broadcast=rule - allow signals on the system DBus according to rule.\n"
+	"    --dbus-system.broadcast=rule - allow signals on the system DBus according\n"
+	"\tto rule.\n"
 	"    --dbus-system.call=rule - allow calls on the system DBus according to rule.\n"
-	"    --dbus-system.log - turn on logging for the system DBus."
+	"    --dbus-system.log - turn on logging for the system DBus.\n"
 	"    --dbus-system.own=name - allow ownership of name on the system DBus.\n"
 	"    --dbus-system.see=name - allow seeing name on the system DBus.\n"
 	"    --dbus-system.talk=name - allow talking to name on the system DBus.\n"
 	"    --dbus-user=filter|none - set session DBus access policy.\n"
-	"    --dbus-user.broadcast=rule - allow signals on the session DBus according to rule.\n"
+	"    --dbus-user.broadcast=rule - allow signals on the session DBus according\n"
+	"\tto rule.\n"
 	"    --dbus-user.call=rule - allow calls on the session DBus according to rule.\n"
-	"    --dbus-user.log - turn on logging for the user DBus."
+	"    --dbus-user.log - turn on logging for the user DBus.\n"
 	"    --dbus-user.own=name - allow ownership of name on the session DBus.\n"
 	"    --dbus-user.see=name - allow seeing name on the session DBus.\n"
 	"    --dbus-user.talk=name - allow talking to name on the session DBus.\n"
@@ -80,9 +82,7 @@ static char *usage_str =
 	"    --debug-protocols - print all recognized protocols.\n"
 	"    --debug-syscalls - print all recognized system calls.\n"
 	"    --debug-syscalls32 - print all recognized 32 bit system calls.\n"
-#ifdef HAVE_WHITELIST
 	"    --debug-whitelists - debug whitelisting.\n"
-#endif
 #ifdef HAVE_NETWORK
 	"    --defaultgw=address - configure default gateway.\n"
 #endif
@@ -97,6 +97,8 @@ static char *usage_str =
 	"    --help, -? - this help screen.\n"
 	"    --hostname=name - set sandbox hostname.\n"
 	"    --hosts-file=file - use file as /etc/hosts.\n"
+	"    --ids-check - verify file system.\n"
+	"    --ids-init - initialize IDS database.\n"
 	"    --ignore=command - ignore command in profile files.\n"
 #ifdef HAVE_NETWORK
 	"    --interface=name - move interface in sandbox.\n"
@@ -114,7 +116,8 @@ static char *usage_str =
 	"    --join-network=name|pid - join the network namespace.\n"
 #endif
 	"    --join-or-start=name|pid - join the sandbox or start a new one.\n"
-        "    --keep-dev-shm - /dev/shm directory is untouched (even with --private-dev).\n"
+	"    --keep-config-pulse - disable automatic ~/.config/pulse init.\n"
+	"    --keep-dev-shm - /dev/shm directory is untouched (even with --private-dev).\n"
 	"    --keep-var-tmp - /var/tmp directory is untouched.\n"
 	"    --list - list all sandboxes.\n"
 #ifdef HAVE_FILE_TRANSFER
@@ -142,8 +145,8 @@ static char *usage_str =
 	"    --netfilter.print=name|pid - print the firewall.\n"
 	"    --netfilter6=filename - enable IPv6 firewall.\n"
 	"    --netfilter6.print=name|pid - print the IPv6 firewall.\n"
-	"    --netmask=address - define a network mask when dealing with unconfigured"
-	"\tparrent interfaces.\n"
+	"    --netmask=address - define a network mask when dealing with unconfigured\n"
+	"\tparent interfaces.\n"
 	"    --netns=name - Run the program in a named, persistent network namespace.\n"
 	"    --netstats - monitor network statistics.\n"
 #endif
@@ -154,6 +157,7 @@ static char *usage_str =
 	"    --nodvd - disable DVD and audio CD devices.\n"
 	"    --noexec=filename - remount the file or directory noexec nosuid and nodev.\n"
 	"    --nogroups - disable supplementary groups.\n"
+	"    --noinput - disable input devices.\n"
 	"    --nonewprivs - sets the NO_NEW_PRIVS prctl.\n"
 	"    --noprofile - do not use a security profile.\n"
 #ifdef HAVE_USERNS
@@ -250,9 +254,7 @@ static char *usage_str =
 #ifdef HAVE_NETWORK
 	"    --veth-name=name - use this name for the interface connected to the bridge.\n"
 #endif
-#ifdef HAVE_WHITELIST
 	"    --whitelist=filename - whitelist directory or file.\n"
-#endif
 	"    --writable-etc - /etc directory is mounted read-write.\n"
 	"    --writable-run-user - allow access to /run/user/$UID/systemd and\n"
 	"\t/run/user/$UID/gnupg.\n"

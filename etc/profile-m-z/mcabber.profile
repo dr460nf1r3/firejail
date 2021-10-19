@@ -12,13 +12,13 @@ noblacklist ${HOME}/.mcabberrc
 include disable-common.inc
 include disable-devel.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 
 caps.drop all
 netfilter
 nodvd
+noinput
 nonewprivs
 noroot
 nosound
@@ -31,4 +31,4 @@ shell none
 
 private-bin mcabber
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,pki,ssl
+private-etc alternatives,ca-certificates,crypto-policies,ld.so.preload,pki,ssl

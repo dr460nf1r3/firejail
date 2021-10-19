@@ -19,13 +19,14 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
-mkfile  ${HOME}/.config/spectaclerc
+mkfile ${HOME}/.config/spectaclerc
 whitelist ${HOME}/.config/spectaclerc
 whitelist ${PICTURES}
+whitelist /usr/share/kconf_update/spectacle_newConfig.upd
+whitelist /usr/share/kconf_update/spectacle_shortcuts.upd
 include whitelist-common.inc
 include whitelist-runuser-common.inc
 include whitelist-usr-share-common.inc
@@ -38,6 +39,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -54,7 +56,7 @@ disable-mnt
 private-bin spectacle
 private-cache
 private-dev
-private-etc alternatives,fonts,ld.so.cache,ld.so.conf,ld.so.conf.d
+private-etc alternatives,fonts,ld.so.cache,ld.so.conf,ld.so.conf.d,ld.so.preload
 private-tmp
 
 dbus-user filter

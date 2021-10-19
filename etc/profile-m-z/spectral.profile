@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -33,6 +32,7 @@ caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -49,10 +49,8 @@ private-dev
 private-etc alsa,alternatives,asound.conf,ca-certificates,crypto-policies,fonts,gtk-2.0,gtk-3.0,host.conf,hostname,hosts,ld.so.cache,ld.so.conf,ld.so.conf.d,ld.so.preload,locale,locale.alias,locale.conf,mime.types,nsswitch.conf,pki,pulse,resolv.conf,selinux,ssl,X11,xdg
 private-tmp
 
-dbus-user none
-# Add the next lines to your spectral.local to enable notification support.
-#ignore dbus-user none
-#dbus-user filter
+dbus-user filter
+?ALLOW_TRAY: dbus-user.talk org.kde.StatusNotifierWatcher
+# Add the next line to your spectral.local to enable notification support.
 #dbus-user.talk org.freedesktop.Notifications
-#dbus-user.talk org.kde.StatusNotifierWatcher
 dbus-system none

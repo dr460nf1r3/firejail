@@ -17,7 +17,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 include whitelist-usr-share-common.inc
@@ -29,6 +28,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -45,7 +45,7 @@ private-bin aria2c,gzip
 # Add 'private-cache' to your aria2c.local if you don't use Lutris/winetricks (see issue #2772).
 #private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,groups,login.defs,machine-id,nsswitch.conf,passwd,pki,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,groups,ld.so.preload,login.defs,machine-id,nsswitch.conf,passwd,pki,resolv.conf,ssl
 private-lib libreadline.so.*
 private-tmp
 

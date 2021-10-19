@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -31,6 +30,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -45,7 +45,7 @@ disable-mnt
 private-bin pavucontrol
 private-cache
 private-dev
-private-etc alternatives,asound.conf,avahi,fonts,machine-id,pulse
+private-etc alternatives,asound.conf,avahi,fonts,ld.so.preload,machine-id,pulse
 private-lib
 private-tmp
 

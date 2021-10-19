@@ -12,7 +12,7 @@
 #
 
 AC_PREREQ([2.68])
-AC_INIT(firejail, 0.9.65, netblue30@protonmail.com, , https://firejail.wordpress.com)
+AC_INIT([firejail],[0.9.67],[netblue30@protonmail.com],[],[https://firejail.wordpress.com])
 AC_CONFIG_SRCDIR([src/firejail/main.c])
 
 AC_CONFIG_MACRO_DIR([m4])
@@ -24,33 +24,43 @@ AC_PROG_RANLIB
 HAVE_SPECTRE="no"
 AX_CHECK_COMPILE_FLAG(
     [-mindirect-branch=thunk],
-    [HAVE_SPECTRE="yes" && EXTRA_CFLAGS+=" -mindirect-branch=thunk"]
+    [HAVE_SPECTRE="yes" && EXTRA_CFLAGS="$EXTRA_CFLAGS -mindirect-branch=thunk"]
 )
 AX_CHECK_COMPILE_FLAG(
     [-mretpoline],
-    [HAVE_SPECTRE="yes" && EXTRA_CFLAGS+=" -mretpoline"]
+    [HAVE_SPECTRE="yes" && EXTRA_CFLAGS="$EXTRA_CFLAGS -mretpoline"]
 )
 AX_CHECK_COMPILE_FLAG(
     [-fstack-clash-protection],
-    [HAVE_SPECTRE="yes" && EXTRA_CFLAGS+=" -fstack-clash-protection"]
+    [HAVE_SPECTRE="yes" && EXTRA_CFLAGS="$EXTRA_CFLAGS -fstack-clash-protection"]
 )
 AX_CHECK_COMPILE_FLAG(
     [-fstack-protector-strong],
-    [HAVE_SPECTRE="yes" && EXTRA_CFLAGS+=" -fstack-protector-strong"]
+    [HAVE_SPECTRE="yes" && EXTRA_CFLAGS="$EXTRA_CFLAGS -fstack-protector-strong"]
 )
 
 AC_ARG_ENABLE([analyzer],
-    AS_HELP_STRING([--enable-analyzer], [enable GCC 10 static analyzer]))
+    AS_HELP_STRING([--enable-analyzer], [enable GCC static analyzer]))
 AS_IF([test "x$enable_analyzer" = "xyes"], [
-	EXTRA_CFLAGS+=" -fanalyzer"
+	EXTRA_CFLAGS="$EXTRA_CFLAGS -fanalyzer -Wno-analyzer-malloc-leak"
 ])
+
+AC_ARG_ENABLE([sanitizer],
+    AS_HELP_STRING([--enable-sanitizer=@<:@address | memory | undefined@:>@], [enable a compiler-based sanitizer (debug)]), [], [enable_sanitizer=no])
+AS_IF([test "x$enable_sanitizer" != "xno" ],
+	[AX_CHECK_COMPILE_FLAG([-fsanitize=$enable_sanitizer], [
+		EXTRA_CFLAGS="$EXTRA_CFLAGS -fsanitize=$enable_sanitizer -fno-omit-frame-pointer"
+		EXTRA_LDFLAGS="$EXTRA_LDFLAGS -fsanitize=$enable_sanitizer"
+	], [AC_MSG_ERROR([sanitizer not supported: $enable_sanitizer])]
+)])
 
 HAVE_APPARMOR=""
 AC_ARG_ENABLE([apparmor],
     AS_HELP_STRING([--enable-apparmor], [enable apparmor]))
 AS_IF([test "x$enable_apparmor" = "xyes"], [
 	HAVE_APPARMOR="-DHAVE_APPARMOR"
-	PKG_CHECK_MODULES([AA], libapparmor, [EXTRA_CFLAGS+=" $AA_CFLAGS" && EXTRA_LDFLAGS+=" $AA_LIBS"])
+	PKG_CHECK_MODULES([AA], libapparmor,
+	    [EXTRA_CFLAGS="$EXTRA_CFLAGS $AA_CFLAGS" && EXTRA_LDFLAGS="$EXTRA_LDFLAGS $AA_LIBS"])
 	AC_SUBST(HAVE_APPARMOR)
 ])
 
@@ -59,7 +69,7 @@ AC_ARG_ENABLE([selinux],
     AS_HELP_STRING([--enable-selinux], [SELinux labeling support]))
 AS_IF([test "x$enable_selinux" = "xyes"], [
 	HAVE_SELINUX="-DHAVE_SELINUX"
-	EXTRA_LDFLAGS+=" -lselinux "
+	EXTRA_LDFLAGS="$EXTRA_LDFLAGS -lselinux "
 	AC_SUBST(HAVE_SELINUX)
 ])
 
@@ -75,7 +85,7 @@ AS_IF([test "x$enable_dbusproxy" != "xno"], [
 	AC_SUBST(HAVE_DBUSPROXY)
 ])
 
-# overlayfs features temporarely disabled pending fixes
+# overlayfs features temporarily disabled pending fixes
 HAVE_OVERLAYFS=""
 AC_SUBST(HAVE_OVERLAYFS)
 #
@@ -176,14 +186,6 @@ AS_IF([test "x$enable_file_transfer" != "xno"], [
 	AC_SUBST(HAVE_FILE_TRANSFER)
 ])
 
-HAVE_WHITELIST=""
-AC_ARG_ENABLE([whitelist],
-    AS_HELP_STRING([--disable-whitelist], [disable whitelist]))
-AS_IF([test "x$enable_whitelist" != "xno"], [
-	HAVE_WHITELIST="-DHAVE_WHITELIST"
-	AC_SUBST(HAVE_WHITELIST)
-])
-
 HAVE_SUID=""
 AC_ARG_ENABLE([suid],
     AS_HELP_STRING([--disable-suid], [install as a non-SUID executable]))
@@ -215,7 +217,7 @@ AC_ARG_ENABLE([gcov],
     AS_HELP_STRING([--enable-gcov], [Gcov instrumentation]))
 AS_IF([test "x$enable_gcov" = "xyes"], [
 	HAVE_GCOV="--coverage -DHAVE_GCOV "
-	EXTRA_LDFLAGS+=" -lgcov --coverage "
+	EXTRA_LDFLAGS="$EXTRA_LDFLAGS -lgcov --coverage "
 	AC_SUBST(HAVE_GCOV)
 ])
 
@@ -303,53 +305,55 @@ if test "$prefix" = /usr; then
 fi
 
 AC_CONFIG_FILES([mkdeb.sh], [chmod +x mkdeb.sh])
-AC_OUTPUT(Makefile src/common.mk src/lib/Makefile src/fcopy/Makefile src/fnet/Makefile src/firejail/Makefile src/fnetfilter/Makefile \
+AC_CONFIG_FILES([Makefile src/common.mk src/lib/Makefile src/fcopy/Makefile src/fnet/Makefile src/firejail/Makefile src/fnetfilter/Makefile \
 src/firemon/Makefile src/libtrace/Makefile src/libtracelog/Makefile src/firecfg/Makefile src/fbuilder/Makefile src/fsec-print/Makefile \
 src/ftee/Makefile src/fseccomp/Makefile src/fldd/Makefile src/libpostexecseccomp/Makefile src/fsec-optimize/Makefile \
 src/profstats/Makefile src/man/Makefile src/zsh_completion/Makefile src/bash_completion/Makefile test/Makefile \
-src/jailtest/Makefile)
+src/jailcheck/Makefile src/fids/Makefile])
+AC_OUTPUT
 
-echo
-echo "Configuration options:"
-echo "   prefix: $prefix"
-echo "   sysconfdir: $sysconfdir"
-echo "   apparmor: $HAVE_APPARMOR"
-echo "   SELinux labeling support: $HAVE_SELINUX"
-echo "   global config: $HAVE_GLOBALCFG"
-echo "   chroot: $HAVE_CHROOT"
-echo "   network: $HAVE_NETWORK"
-echo "   user namespace: $HAVE_USERNS"
-echo "   X11 sandboxing support: $HAVE_X11"
-echo "   whitelisting: $HAVE_WHITELIST"
-echo "   private home support: $HAVE_PRIVATE_HOME"
-echo "   file transfer support: $HAVE_FILE_TRANSFER"
-echo "   overlayfs support: $HAVE_OVERLAYFS"
-echo "   DBUS proxy support: $HAVE_DBUSPROXY"
-echo "   allow tmpfs as regular user: $HAVE_USERTMPFS"
-echo "   enable --ouput logging: $HAVE_OUTPUT"
-echo "   Manpage support: $HAVE_MAN"
-echo "   firetunnel support: $HAVE_FIRETUNNEL"
-echo "   busybox workaround: $BUSYBOX_WORKAROUND"
-echo "   Spectre compiler patch: $HAVE_SPECTRE"
-echo "   EXTRA_LDFLAGS: $EXTRA_LDFLAGS"
-echo "   EXTRA_CFLAGS: $EXTRA_CFLAGS"
-echo "   fatal warnings: $HAVE_FATAL_WARNINGS"
-echo "   Gcov instrumentation: $HAVE_GCOV"
-echo "   Install contrib scripts: $HAVE_CONTRIB_INSTALL"
-echo "   Install as a SUID executable: $HAVE_SUID"
-echo "   LTS: $HAVE_LTS"
-echo "   Always enforce filters: $HAVE_FORCE_NONEWPRIVS"
-echo
+cat <<EOF
 
+Configuration options:
+   prefix: $prefix
+   sysconfdir: $sysconfdir
+   apparmor: $HAVE_APPARMOR
+   SELinux labeling support: $HAVE_SELINUX
+   global config: $HAVE_GLOBALCFG
+   chroot: $HAVE_CHROOT
+   network: $HAVE_NETWORK
+   user namespace: $HAVE_USERNS
+   X11 sandboxing support: $HAVE_X11
+   private home support: $HAVE_PRIVATE_HOME
+   file transfer support: $HAVE_FILE_TRANSFER
+   overlayfs support: $HAVE_OVERLAYFS
+   DBUS proxy support: $HAVE_DBUSPROXY
+   allow tmpfs as regular user: $HAVE_USERTMPFS
+   enable --ouput logging: $HAVE_OUTPUT
+   Manpage support: $HAVE_MAN
+   firetunnel support: $HAVE_FIRETUNNEL
+   busybox workaround: $BUSYBOX_WORKAROUND
+   Spectre compiler patch: $HAVE_SPECTRE
+   EXTRA_LDFLAGS: $EXTRA_LDFLAGS
+   EXTRA_CFLAGS: $EXTRA_CFLAGS
+   fatal warnings: $HAVE_FATAL_WARNINGS
+   Gcov instrumentation: $HAVE_GCOV
+   Install contrib scripts: $HAVE_CONTRIB_INSTALL
+   Install as a SUID executable: $HAVE_SUID
+   LTS: $HAVE_LTS
+   Always enforce filters: $HAVE_FORCE_NONEWPRIVS
+
+EOF
 
 if test "$HAVE_LTS" = -DHAVE_LTS; then
-	echo
-	echo
-	echo "*********************************************************"
-	echo "*    Warning: Long-term support (LTS) was enabled!      *"
-	echo "*    Most compile-time options have bean rewritten!     *"
-	echo "*********************************************************"
-	echo
-	echo
-fi
+	cat <<\EOF
 
+
+*********************************************************
+*    Warning: Long-term support (LTS) was enabled!      *
+*    Most compile-time options have bean rewritten!     *
+*********************************************************
+
+
+EOF
+fi

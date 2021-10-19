@@ -10,7 +10,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -26,6 +25,7 @@ ipc-namespace
 net none
 no3d
 nodvd
+noinput
 nonewprivs
 nosound
 notv
@@ -40,7 +40,7 @@ disable-mnt
 private-bin gnome-logs
 private-cache
 private-dev
-private-etc alternatives,fonts,localtime,machine-id
+private-etc alternatives,fonts,ld.so.preload,localtime,machine-id
 private-lib gdk-pixbuf-2.*,gio,gvfs/libgvfscommon.so,libgconf-2.so.*,librsvg-2.so.*
 private-tmp
 writable-var-log
@@ -50,6 +50,5 @@ dbus-user.own org.gnome.Logs
 dbus-user.talk ca.desrt.dconf
 dbus-system none
 
-# comment this if you export logs to a file in your ${HOME}
-# or put 'ignore read-only ${HOME}' in your gnome-logs.local.
+# Add 'ignore read-only ${HOME}' to your gnome-logs.local if you export logs to a file under your ${HOME}.
 read-only ${HOME}

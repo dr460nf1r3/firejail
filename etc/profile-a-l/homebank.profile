@@ -13,7 +13,6 @@ include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
 include disable-programs.inc
-include disable-passwdmgr.inc
 include disable-shell.inc
 include disable-xdg.inc
 
@@ -35,6 +34,7 @@ nodvd
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound

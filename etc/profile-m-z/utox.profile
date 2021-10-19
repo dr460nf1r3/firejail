@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -30,6 +29,7 @@ ipc-namespace
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -43,7 +43,7 @@ disable-mnt
 private-bin utox
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,fonts,ld.so.cache,localtime,machine-id,openal,pki,pulse,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,fonts,ld.so.cache,ld.so.preload,localtime,machine-id,openal,pki,pulse,resolv.conf,ssl
 private-tmp
 
 memory-deny-write-execute

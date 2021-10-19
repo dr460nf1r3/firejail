@@ -6,8 +6,19 @@ include firefox.local
 # Persistent global definitions
 include globals.local
 
+# NOTE: sandboxing web browsers is as important as it is complex. Users might be
+# interested in creating custom profiles depending on use case (e.g. one for
+# general browsing, another for banking, ...). Consult our FAQ/issue tracker for more
+# info. Here are a few links to get you going.
+# https://github.com/netblue30/firejail/wiki/Frequently-Asked-Questions#firefox-doesnt-open-in-a-new-sandbox-instead-it-opens-a-new-tab-in-an-existing-firefox-instance
+# https://github.com/netblue30/firejail/wiki/Frequently-Asked-Questions#how-do-i-run-two-instances-of-firefox
+# https://github.com/netblue30/firejail/issues/4206#issuecomment-824806968
+
 noblacklist ${HOME}/.cache/mozilla
 noblacklist ${HOME}/.mozilla
+noblacklist ${RUNUSER}/*firefox*
+
+blacklist /usr/libexec
 
 mkdir ${HOME}/.cache/mozilla/firefox
 mkdir ${HOME}/.mozilla
@@ -25,6 +36,7 @@ whitelist /usr/share/gnome-shell/search-providers/firefox-search-provider.ini
 whitelist /usr/share/gtk-doc/html
 whitelist /usr/share/mozilla
 whitelist /usr/share/webext
+whitelist ${RUNUSER}/*firefox*
 include whitelist-usr-share-common.inc
 
 # firefox requires a shell to launch on Arch - add the next line to your firefox.local to enable private-bin.
@@ -46,9 +58,8 @@ dbus-user.own org.mpris.MediaPlayer2.firefox.*
 #dbus-user.own org.mpris.MediaPlayer2.plasma-browser-integration
 #dbus-user.talk org.kde.JobViewServer
 #dbus-user.talk org.kde.kuiserver
-# Add the next two lines to your firefox.local to allow screen sharing under wayland.
-#whitelist ${RUNUSER}/pipewire-0
-#dbus-user.talk org.freedesktop.portal.*
+# Add the next line to your firefox.local to allow screen sharing under wayland.
+#dbus-user.talk org.freedesktop.portal.Desktop
 # Add the next line to your firefox.local if screen sharing sharing still does not work
 # with the above lines (might depend on the portal implementation).
 #ignore noroot

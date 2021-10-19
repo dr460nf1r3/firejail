@@ -18,7 +18,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -31,6 +30,7 @@ whitelist ${HOME}/.cache/gfeeds
 whitelist ${HOME}/.cache/org.gabmus.gfeeds
 whitelist ${HOME}/.config/org.gabmus.gfeeds.json
 whitelist ${HOME}/.config/org.gabmus.gfeeds.saved_articles
+whitelist /usr/libexec/webkit2gtk-4.0
 whitelist /usr/share/gfeeds
 include whitelist-common.inc
 include whitelist-runuser-common.inc
@@ -44,6 +44,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound

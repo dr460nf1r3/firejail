@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -39,6 +38,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -54,7 +54,7 @@ disable-mnt
 private-bin equalx,gs,pdflatex,pdftocairo
 private-cache
 private-dev
-private-etc equalx,equalx.conf,fonts,gtk-2.0,latexmk.conf,machine-id,papersize,passwd,texlive,Trolltech.conf
+private-etc equalx,equalx.conf,fonts,gtk-2.0,latexmk.conf,ld.so.preload,machine-id,papersize,passwd,texlive,Trolltech.conf
 private-tmp
 
 dbus-user none

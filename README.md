@@ -22,43 +22,23 @@ implemented directly in Linux kernel and available on any Linux computer.
 <table><tr>
 
 <td>
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=7RMz7tePA98
-" target="_blank"><img src="http://img.youtube.com/vi/7RMz7tePA98/0.jpg"
-alt="Firejail Introduction" width="240" height="180" border="10" /><br/>Firejail Intro</a>
+<a href="https://www.brighteon.com/1928415c-2bce-40b2-a81f-7861a3734913" target="_blank">
+<img src="https://video.brighteon.com/file/Brighteon-staging/thumbnail/682ae17c-3fd8-4813-9c4e-6917c7cd2a5c.0000001.jpg"
+alt="Introduction" width="240" height="142" border="10" /><br/>Introduction</a>
 </td>
 
 <td>
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=J1ZsXrpAgBU
-" target="_blank"><img src="http://img.youtube.com/vi/J1ZsXrpAgBU/0.jpg"
-alt="Firejail Demo" width="240" height="180" border="10" /><br/>Firejail Demo</a>
+<a href="https://www.brighteon.com/c20c32ac-1953-438f-8640-a414dcb318d6" target="_blank">
+<img src="https://photos.brighteon.com/thumbnail/ecd8b0ca-7564-4993-a676-bbe4aa21cffc"
+alt="Technology" width="240" height="142" border="10" /><br/>Technology</a>
 </td>
 
 <td>
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=EyEz65RYfw4
-" target="_blank"><img src="http://img.youtube.com/vi/EyEz65RYfw4/0.jpg"
-alt="Debian Install" width="240" height="180" border="10" /><br/>Debian Install</a>
+<a href="https://www.brighteon.com/94ae1731-2352-4cda-bb48-7cc7a6ad32f8" target="_blank">
+<img src="https://photos.brighteon.com/thumbnail/5c90254c-61f3-4927-ac57-ae279dc543cf"
+alt="Deep Dive" width="240" height="142" border="10" /><br/>Deep Dive</a>
 </td>
 
-
-</tr><tr>
-<td>
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=Uy2ZTHc4s0w
-" target="_blank"><img src="http://img.youtube.com/vi/Uy2ZTHc4s0w/0.jpg"
-alt="Arch Linux Install" width="240" height="180" border="10" /><br/>Arch Linux Install</a>
-
-</td>
-<td>
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=xuMxRx0zSfQ
-" target="_blank"><img src="http://img.youtube.com/vi/xuMxRx0zSfQ/0.jpg"
-alt="Disable Network Access" width="240" height="180" border="10" /><br/>Disable Network Access</a>
-
-</td>
-<td>
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=N-Mso2bSr3o
-" target="_blank"><img src="http://img.youtube.com/vi/N-Mso2bSr3o/0.jpg"
-alt="Firejail Security Deep Dive" width="240" height="180" border="10" /><br/>Firejail Security Deep Dive</a>
-
-</td>
 </tr></table>
 
 Project webpage: https://firejail.wordpress.com/
@@ -114,7 +94,7 @@ https://unparalleled.eu/blog/2021/20210208-rigged-race-against-firejail-for-loca
 
 ## Installing
 
-Try installing Firejail from your system packages first. Firejail is included in Alpine, ALT Linux, Arch, Chakra, Debian, Deepin, Devuan, Fedora, Gentoo, Manjaro, Mint, NixOS, Parabola, Parrot, PCLinuxOS, ROSA, Solus, Slackware/SlackBuilds, Trisquel, Ubuntu, Void and possibly others.
+Try installing Firejail from your system packages first. Firejail is included in Alpine, ALT Linux, Arch, Artix, Chakra, Debian, Deepin, Devuan, Fedora, Gentoo, Manjaro, Mint, NixOS, Parabola, Parrot, PCLinuxOS, ROSA, Solus, Slackware/SlackBuilds, Trisquel, Ubuntu, Void and possibly others.
 
 The firejail 0.9.52-LTS version is deprecated. On Ubuntu 18.04 LTS users are advised to use the [PPA](https://launchpad.net/~deki/+archive/ubuntu/firejail). On Debian buster we recommend to use the [backports](https://packages.debian.org/buster-backports/firejail) package.
 
@@ -126,18 +106,18 @@ $ cd firejail
 $ ./configure && make && sudo make install-strip
 `````
 On Debian/Ubuntu you will need to install git and gcc compiler. AppArmor
-development libraries and pkg-config are required when using --apparmor
+development libraries and pkg-config are required when using `--apparmor`
 ./configure option:
 `````
 $ sudo apt-get install git build-essential libapparmor-dev pkg-config gawk
 `````
-For --selinux option, add libselinux1-dev (libselinux-devel for Fedora).
+For `--selinux` option, add libselinux1-dev (libselinux-devel for Fedora).
 
 Detailed information on using firejail from git is available on the [wiki](https://github.com/netblue30/firejail/wiki/Using-firejail-from-git).
 
 ## Running the sandbox
 
-To start the sandbox, prefix your command with “firejail”:
+To start the sandbox, prefix your command with `firejail`:
 
 `````
 $ firejail firefox            # starting Mozilla Firefox
@@ -145,7 +125,7 @@ $ firejail transmission-gtk   # starting Transmission BitTorrent
 $ firejail vlc                # starting VideoLAN Client
 $ sudo firejail /etc/init.d/nginx start
 `````
-Run "firejail --list" in a terminal to list all active sandboxes. Example:
+Run `firejail --list` in a terminal to list all active sandboxes. Example:
 `````
 $ firejail --list
 1617:netblue:/usr/bin/firejail /usr/bin/firefox-esr
@@ -188,110 +168,49 @@ Use this issue to request new profiles: [#1139](https://github.com/netblue30/fir
 You can also use this tool to get a list of syscalls needed by a program: [contrib/syscalls.sh](contrib/syscalls.sh).
 
 We also keep a list of profile fixes for previous released versions in [etc-fixes](https://github.com/netblue30/firejail/tree/master/etc-fixes) directory.
-`````
 
-`````
-## Latest released version: 0.9.64
+## Latest released version: 0.9.66
 
-## Current development version: 0.9.65
+## Current development version: 0.9.67
 
 Milestone page: https://github.com/netblue30/firejail/milestone/1
 Release discussion: https://github.com/netblue30/firejail/issues/3696
 
-### jailtest
+Moving from whitelist/blacklist to allow/deny is under way! We are still open to other options, so it might change!
+
+The old whitelist/blacklist will remain as aliasses for the next one or two releases
+in order to give users a chance to switch their local profiles.
+The latest discussion on this issue is here: https://github.com/netblue30/firejail/issues/4379
+
+### Intrusion Detection System ###
+
+We are adding IDS capabilities in the next release. We have the list of files in [/etc/firejail/ids.config](https://github.com/netblue30/firejail/blob/master/etc/ids.config),
+and we generate a [BLAKE2](https://en.wikipedia.org/wiki/BLAKE_%28hash_function%29) checksum in /var/lib/firejail/username.ids.
+The program runs as regular user, each user has his own file in /var/lib/firejail.
+
+Initialize the database:
 `````
-JAILTEST(1)                    JAILTEST man page                   JAILTEST(1)
-
-NAME
-       jailtest - Simple utility program to test running sandboxes
-
-SYNOPSIS
-       sudo jailtest [OPTIONS] [directory]
-
-DESCRIPTION
-       WORK IN PROGRESS!  jailtest attaches itself to all sandboxes started by
-       the user and performs some basic tests on the sandbox filesystem:
-
-       1. Virtual directories
-              jailtest extracts a list with the main virtual  directories  in‐
-              stalled by the sandbox.  These directories are build by firejail
-              at startup using --private* and --whitelist commands.
-
-       2. Noexec test
-              jailtest inserts executable programs  in  /home/username,  /tmp,
-              and  /var/tmp  directories and tries to run them form inside the
-              sandbox, thus testing if the directory is executable or not.
-
-       3. Read access test
-              jailtest creates test files in the directories specified by  the
-              user and tries to read them from inside the sandbox.
-
-       4. AppArmor test
-
-       5. Seccomp test
-
-       The program is started as root using sudo.
-
-OPTIONS
-       --debug
-              Print debug messages
-
-       -?, --help
-              Print options end exit.
-
-       --version
-              Print program version and exit.
-
-       [directory]
-              One  or  more  directories in user home to test for read access.
-              ~/.ssh and ~/.gnupg are tested by default.
-
-OUTPUT
-       For each sandbox detected we print the following line:
-
-            PID:USER:Sandbox Name:Command
-
-       It is followed by relevant sandbox information, such as the virtual di‐
-       rectories and various warnings.
-
-EXAMPLE
-       $ sudo jailtest
-       2014:netblue::firejail /usr/bin/gimp
-          Virtual dirs: /tmp, /var/tmp, /dev, /usr/share,
-          Warning: I can run programs in /home/netblue
-
-       2055:netblue::firejail /usr/bin/ssh -X netblue@x.y.z.net
-          Virtual dirs: /var/tmp, /dev, /usr/share, /run/user/1000,
-          Warning: I can read ~/.ssh
-
-       2186:netblue:libreoffice:firejail --appimage /opt/LibreOffice-fresh.ap‐
-       pimage
-          Virtual dirs: /tmp, /var/tmp, /dev,
-
-       26090:netblue::/usr/bin/firejail /opt/firefox/firefox
-          Virtual dirs: /home/netblue, /tmp, /var/tmp, /dev, /etc, /usr/share,
-                        /run/user/1000,
-
-       26160:netblue:tor:firejail --private=~/tor-browser_en-US ./start-tor
-          Warning: AppArmor not enabled
-          Virtual dirs: /home/netblue, /tmp, /var/tmp, /dev, /etc, /bin,
-                        /usr/share, /run/user/1000,
-          Warning: I can run programs in /home/netblue
-
-LICENSE
-       This program is free software; you can redistribute it and/or modify it
-       under  the  terms of the GNU General Public License as published by the
-       Free Software Foundation; either version 2 of the License, or (at  your
-       option) any later version.
-
-       Homepage: https://firejail.wordpress.com
-
-SEE ALSO
-       firejail(1),  firemon(1), firecfg(1), firejail-profile(5), firejail-lo‐
-       gin(5), firejail-users(5),
-
-0.9.65                             Feb 2021                        JAILTEST(1)
+$ firejail --ids-init
+Loading /etc/firejail/ids.config config file
+500 1000 1500 2000
+2457 files scanned
+IDS database initialized
 `````
+
+Later, we check it:
+`````
+$ firejail --ids-check
+Loading /etc/firejail/ids.config config file
+500 1000 1500
+Warning: modified /home/netblue/.bashrc
+2000
+2457 files scanned: modified 1, permissions 0, new 0, removed 0
+`````
+The program will print the files that have been modified since the database was created, or the files with different access permissions.
+New files and deleted files are also flagged.
+
+Currently while scanning the file system symbolic links are not followed, and files the user doesn't have read access to are silently dropped.
+The program can also be run as root (sudo firejail --ids-init/--ids-check).
 
 ### Profile Statistics
 
@@ -300,37 +219,33 @@ A small tool to print profile statistics. Compile as usual and run in /etc/profi
 $ sudo cp src/profstats/profstats /etc/firejail/.
 $ cd /etc/firejail
 $ ./profstats *.profile
-Warning: multiple caps in transmission-daemon.profile
-
-Stats:
-    profiles			1077
-    include local profile	1077   (include profile-name.local)
-    include globals		1077   (include globals.local)
-    blacklist ~/.ssh		971   (include disable-common.inc)
-    seccomp			988
-    capabilities		1076
-    noexec			960   (include disable-exec.inc)
-    memory-deny-write-execute	231
-    apparmor			621
-    private-bin			571
-    private-dev			949
-    private-etc			470
-    private-tmp			835
-    whitelist home directory	508
-    whitelist var		758   (include whitelist-var-common.inc)
-    whitelist run/user		539   (include whitelist-runuser-common.inc
+    profiles			1167
+    include local profile	1167   (include profile-name.local)
+    include globals		1136   (include globals.local)
+    blacklist ~/.ssh		1042   (include disable-common.inc)
+    seccomp			1062
+    capabilities		1163
+    noexec			1049   (include disable-exec.inc)
+    noroot			971
+    memory-deny-write-execute	256
+    apparmor			693
+    private-bin			677
+    private-dev			1027
+    private-etc			532
+    private-tmp			897
+    whitelist home directory	557
+    whitelist var		836   (include whitelist-var-common.inc)
+    whitelist run/user		1137   (include whitelist-runuser-common.inc
 					or blacklist ${RUNUSER})
-    whitelist usr/share		526   (include whitelist-usr-share-common.inc
-    net none			354
-    dbus-user none 		573
-    dbus-user filter 		86
-    dbus-system none 		706
-    dbus-system filter 		7
+    whitelist usr/share		609   (include whitelist-usr-share-common.inc
+    net none			396
+    dbus-user none 		656
+    dbus-user filter 		108
+    dbus-system none 		808
+    dbus-system filter 		10
 ```
 
 ### New profiles:
 
-vmware-view, display-im6.q16, ipcalc, ipcalc-ng, ebook-convert, ebook-edit, ebook-meta, ebook-polish, lzop,
-avidemux, calligragemini, vmware-player, vmware-workstation, gget, com.github.phase1geo.minder, nextcloud-desktop,
-pcsxr, PPSSPPSDL, openmw, openmw-launcher, jami-gnome, PCSX2, bcompare, b2sum, cksum, md5sum, sha1sum, sha224sum,
-sha256sum, sha384sum, sha512sum, sum, librewold-nightly
+clion-eap, lifeograph, io.github.lainsce.Notejot, rednotebook, zim, microsoft-edge-beta, ncdu2, gallery-dl, yt-dlp, goldendict, bundle,
+cmake, make, meson, pip, codium

@@ -16,7 +16,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 whitelist /usr/share/nano
@@ -30,6 +29,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -46,8 +46,12 @@ x11 none
 private-bin nano,rnano
 private-cache
 private-dev
-# Comment the next line if you want to edit files in /etc directly
-private-etc alternatives,nanorc
+# Add the next lines to your nano.local if you want to edit files in /etc directly.
+#ignore private-etc
+#writable-etc
+private-etc alternatives,ld.so.preload,nanorc
+# Add the next line to your nano.local if you want to edit files in /var directly.
+#writable-var
 
 dbus-user none
 dbus-system none

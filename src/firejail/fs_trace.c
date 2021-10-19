@@ -20,26 +20,31 @@
 #include "firejail.h"
 #include <sys/mount.h>
 #include <sys/stat.h>
-#include <linux/limits.h>
 #include <glob.h>
 #include <dirent.h>
 #include <fcntl.h>
 #include <pwd.h>
 
-void fs_trace_preload(void) {
+// create an empty /etc/ld.so.preload
+void fs_trace_touch_preload(void) {
+	create_empty_file_as_root("/etc/ld.so.preload", S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
+}
+
+void fs_trace_touch_or_store_preload(void) {
 	struct stat s;
 
-	// create an empty /etc/ld.so.preload
-	if (stat("/etc/ld.so.preload", &s)) {
-		if (arg_debug)
-			printf("Creating an empty /etc/ld.so.preload file\n");
-		/* coverity[toctou] */
-		FILE *fp = fopen("/etc/ld.so.preload", "w");
-		if (!fp)
-			errExit("fopen");
-		SET_PERMS_STREAM(fp, 0, 0, S_IRUSR | S_IWRITE | S_IRGRP | S_IROTH);
-		fclose(fp);
-		fs_logger("touch /etc/ld.so.preload");
+	if (stat("/etc/ld.so.preload", &s) != 0) {
+		fs_trace_touch_preload();
+		return;
+	}
+
+	if (s.st_size == 0)
+		return;
+
+	// create a copy of /etc/ld.so.preload
+	if (copy_file("/etc/ld.so.preload", RUN_LDPRELOAD_FILE, 0, 0, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH)) {
+		fprintf(stderr, "Error: cannot copy /etc/ld.so.preload file\n");
+		exit(1);
 	}
 }
 
@@ -48,7 +53,7 @@ void fs_tracefile(void) {
 	if (arg_debug)
 		printf("Creating an empty trace log file: %s\n", arg_tracefile);
 	EUID_USER();
-	int fd = open(arg_tracefile, O_CREAT|O_WRONLY|O_CLOEXEC, S_IRUSR | S_IWRITE | S_IRGRP | S_IROTH);
+	int fd = open(arg_tracefile, O_CREAT|O_WRONLY|O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (fd == -1) {
 		perror("open");
 		fprintf(stderr, "Error: cannot open trace log file %s for writing\n", arg_tracefile);
@@ -64,20 +69,16 @@ void fs_tracefile(void) {
 	if (ftruncate(fd, 0) == -1)
 		errExit("ftruncate");
 	EUID_ROOT();
-	FILE *fp = fopen(RUN_TRACE_FILE, "w");
+	FILE *fp = fopen(RUN_TRACE_FILE, "we");
 	if (!fp)
 		errExit("fopen " RUN_TRACE_FILE);
 	fclose(fp);
-	fs_logger2("touch ", arg_tracefile);
+	fs_logger2("touch", arg_tracefile);
 	// mount using the symbolic link in /proc/self/fd
 	if (arg_debug)
 		printf("Bind mount %s to %s\n", arg_tracefile, RUN_TRACE_FILE);
-	char *proc;
-	if (asprintf(&proc, "/proc/self/fd/%d", fd) == -1)
-		errExit("asprintf");
-	if (mount(proc, RUN_TRACE_FILE, NULL, MS_BIND|MS_REC, NULL) < 0)
+	if (bind_mount_fd_to_path(fd, RUN_TRACE_FILE))
 		errExit("mount bind " RUN_TRACE_FILE);
-	free(proc);
 	close(fd);
 	// now that RUN_TRACE_FILE is user-writable, mount it noexec
 	fs_remount(RUN_TRACE_FILE, MOUNT_NOEXEC, 0);
@@ -88,7 +89,7 @@ void fs_trace(void) {
 	if (arg_debug)
 		printf("Create the new ld.so.preload file\n");
 
-	FILE *fp = fopen(RUN_LDPRELOAD_FILE, "w");
+	FILE *fp = fopen(RUN_LDPRELOAD_FILE, "ae");
 	if (!fp)
 		errExit("fopen");
 	const char *prefix = RUN_FIREJAIL_LIB_DIR;
@@ -105,7 +106,7 @@ void fs_trace(void) {
 		fmessage("Post-exec seccomp protector enabled\n");
 	}
 
-	SET_PERMS_STREAM(fp, 0, 0, S_IRUSR | S_IWRITE | S_IRGRP | S_IROTH);
+	SET_PERMS_STREAM(fp, 0, 0, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	fclose(fp);
 
 	// mount the new preload file

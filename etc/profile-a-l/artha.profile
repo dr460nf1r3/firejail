@@ -17,7 +17,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -41,6 +40,7 @@ ipc-namespace
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -56,7 +56,7 @@ disable-mnt
 private-bin artha,enchant,notify-send
 private-cache
 private-dev
-private-etc alternatives,fonts,machine-id
+private-etc alternatives,fonts,ld.so.preload,machine-id
 private-lib libnotify.so.*
 private-tmp
 

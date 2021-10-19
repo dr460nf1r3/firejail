@@ -11,7 +11,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -24,6 +23,7 @@ ipc-namespace
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -38,7 +38,7 @@ disable-mnt
 private ${HOME}/.xmr-stak
 private-bin xmr-stak
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,nsswitch.conf,pki,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,ld.so.preload,nsswitch.conf,pki,resolv.conf,ssl
 #private-lib libxmrstak_opencl_backend,libxmrstak_cuda_backend
 private-opt cuda
 private-tmp

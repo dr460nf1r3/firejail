@@ -19,6 +19,7 @@
 */
 
 #include "firejail.h"
+#include "../include/gcov_wrapper.h"
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/wait.h>
@@ -221,7 +222,7 @@ void cat(const char *path) {
 
 	if (arg_debug)
 		printf("cat %s\n", path);
-	FILE *fp = fopen(path, "r");
+	FILE *fp = fopen(path, "re");
 	if (!fp) {
 		fprintf(stderr, "Error: cannot read %s\n", path);
 		exit(1);
@@ -304,7 +305,7 @@ void sandboxfs(int op, pid_t pid, const char *path1, const char *path2) {
 		}
 		// create destination file if necessary
 		EUID_ASSERT();
-		int fd = open(dest_fname, O_WRONLY|O_CREAT|O_CLOEXEC, S_IRUSR | S_IWRITE);
+		int fd = open(dest_fname, O_WRONLY|O_CREAT|O_CLOEXEC, S_IRUSR | S_IWUSR);
 		if (fd == -1) {
 			fprintf(stderr, "Error: cannot open %s for writing\n", dest_fname);
 			exit(1);
@@ -349,9 +350,8 @@ void sandboxfs(int op, pid_t pid, const char *path1, const char *path2) {
 			ls(fname1);
 		else
 			cat(fname1);
-#ifdef HAVE_GCOV
+
 		__gcov_flush();
-#endif
 	}
 	// get file from host and store it in the sandbox
 	else if (op == SANDBOX_FS_PUT && path2) {
@@ -383,9 +383,9 @@ void sandboxfs(int op, pid_t pid, const char *path1, const char *path2) {
 			// copy the file
 			if (copy_file(src_fname, tmp_fname, getuid(), getgid(), 0600)) // already a regular user
 				_exit(1);
-#ifdef HAVE_GCOV
+
 			__gcov_flush();
-#endif
+
 			_exit(0);
 		}
 
@@ -415,9 +415,9 @@ void sandboxfs(int op, pid_t pid, const char *path1, const char *path2) {
 			// copy the file
 			if (copy_file(tmp_fname, dest_fname, getuid(), getgid(), 0600)) // already a regular user
 				_exit(1);
-#ifdef HAVE_GCOV
+
 			__gcov_flush();
-#endif
+
 			_exit(0);
 		}
 

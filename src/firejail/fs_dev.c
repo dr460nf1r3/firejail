@@ -20,7 +20,6 @@
 #include "firejail.h"
 #include <sys/mount.h>
 #include <sys/stat.h>
-#include <linux/limits.h>
 #include <glob.h>
 #include <dirent.h>
 #include <fcntl.h>
@@ -41,6 +40,7 @@ typedef enum {
 	DEV_TV,
 	DEV_DVD,
 	DEV_U2F,
+	DEV_INPUT
 } DEV_TYPE;
 
 
@@ -89,6 +89,7 @@ static DevEntry dev[] = {
 	{"/dev/hidraw8", RUN_DEV_DIR "/hidraw8", DEV_U2F},
 	{"/dev/hidraw9", RUN_DEV_DIR "/hidraw9", DEV_U2F},
 	{"/dev/usb", RUN_DEV_DIR "/usb", DEV_U2F},	// USB devices such as Yubikey, U2F
+	{"/dev/input", RUN_DEV_DIR "/input", DEV_INPUT},
 	{NULL, NULL, DEV_NONE}
 };
 
@@ -103,7 +104,8 @@ static void deventry_mount(void) {
 			    (dev[i].type == DEV_VIDEO && arg_novideo == 0) ||
 			    (dev[i].type == DEV_TV && arg_notv == 0) ||
 			    (dev[i].type == DEV_DVD && arg_nodvd == 0) ||
-			    (dev[i].type == DEV_U2F && arg_nou2f == 0)) {
+			    (dev[i].type == DEV_U2F && arg_nou2f == 0) ||
+			    (dev[i].type == DEV_INPUT && arg_noinput == 0)) {
 
 				int dir = is_dir(dev[i].run_fname);
 				if (arg_debug)
@@ -119,7 +121,7 @@ static void deventry_mount(void) {
 						i++;
 						continue;
 					}
-					FILE *fp = fopen(dev[i].dev_fname, "w");
+					FILE *fp = fopen(dev[i].dev_fname, "we");
 					if (fp) {
 						fprintf(fp, "\n");
 						SET_PERMS_STREAM(fp, s.st_uid, s.st_gid, s.st_mode);
@@ -184,8 +186,10 @@ static void mount_dev_shm(void) {
 static void process_dev_shm(void) {
 	// Jack audio keeps an Unix socket under (/dev/shm/jack_default_1000_0 or /dev/shm/jack/...)
 	// looking for jack socket
+	EUID_USER();
 	glob_t globbuf;
 	int globerr = glob(RUN_DEV_DIR "/shm/jack*", GLOB_NOSORT, NULL, &globbuf);
+	EUID_ROOT();
 	if (globerr && !arg_keep_dev_shm) {
 		empty_dev_shm();
 		return;
@@ -215,7 +219,7 @@ void fs_private_dev(void){
 	struct stat s;
 	if (stat("/dev/log", &s) == 0) {
 		have_devlog = 1;
-		FILE *fp = fopen(RUN_DEVLOG_FILE, "w");
+		FILE *fp = fopen(RUN_DEVLOG_FILE, "we");
 		if (!fp)
 			have_devlog = 0;
 		else {
@@ -236,7 +240,7 @@ void fs_private_dev(void){
 
 	// bring back /dev/log
 	if (have_devlog) {
-		FILE *fp = fopen("/dev/log", "w");
+		FILE *fp = fopen("/dev/log", "we");
 		if (fp) {
 			fprintf(fp, "\n");
 			fclose(fp);
@@ -325,8 +329,10 @@ void fs_dev_disable_sound(void) {
 	}
 
 	// disable all jack sockets in /dev/shm
+	EUID_USER();
 	glob_t globbuf;
 	int globerr = glob("/dev/shm/jack*", GLOB_NOSORT, NULL, &globbuf);
+	EUID_ROOT();
 	if (globerr)
 		return;
 
@@ -382,6 +388,15 @@ void fs_dev_disable_u2f(void) {
 	int i = 0;
 	while (dev[i].dev_fname != NULL) {
 		if (dev[i].type == DEV_U2F)
+			disable_file_or_dir(dev[i].dev_fname);
+		i++;
+	}
+}
+
+void fs_dev_disable_input(void) {
+	int i = 0;
+	while (dev[i].dev_fname != NULL) {
+		if (dev[i].type == DEV_INPUT)
 			disable_file_or_dir(dev[i].dev_fname);
 		i++;
 	}

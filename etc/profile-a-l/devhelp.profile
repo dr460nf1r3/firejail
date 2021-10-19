@@ -11,7 +11,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -27,6 +26,7 @@ caps.drop all
 # net none - makes settings immutable
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -42,7 +42,7 @@ disable-mnt
 private-bin devhelp
 private-cache
 private-dev
-private-etc alternatives,dconf,fonts,ld.so.cache,machine-id,ssl
+private-etc alternatives,dconf,fonts,ld.so.cache,ld.so.preload,machine-id,ssl
 private-tmp
 
 # makes settings immutable

@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -25,6 +24,7 @@ caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -37,7 +37,7 @@ tracelog
 
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,dconf,drirc,fonts,gtk-3.0,hostname,hosts,kde5rc,machine-id,pki,pulse,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,dconf,drirc,fonts,gtk-3.0,hostname,hosts,kde5rc,ld.so.preload,machine-id,pki,pulse,resolv.conf,ssl
 private-tmp
 private-opt none
 private-srv none

@@ -12,11 +12,14 @@ include chromium-common.local
 noblacklist ${HOME}/.pki
 noblacklist ${HOME}/.local/share/pki
 
+# Add the next line to your chromium-common.local if you want Google Chrome/Chromium browser
+# to have access to Gnome extensions (extensions.gnome.org) via browser connector
+#include allow-python3.inc
+
 include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-# include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -26,6 +29,7 @@ whitelist ${DOWNLOADS}
 whitelist ${HOME}/.pki
 whitelist ${HOME}/.local/share/pki
 include whitelist-common.inc
+include whitelist-run-common.inc
 include whitelist-runuser-common.inc
 include whitelist-usr-share-common.inc
 include whitelist-var-common.inc
@@ -33,14 +37,12 @@ include whitelist-var-common.inc
 # Add the next line to your chromium-common.local if your kernel allows unprivileged userns clone.
 #include chromium-common-hardened.inc.profile
 
-# Add the next line to your chromium-common.local to allow screen sharing under wayland.
-#whitelist ${RUNUSER}/pipewire-0
-
 apparmor
 caps.keep sys_admin,sys_chroot
 netfilter
 nodvd
 nogroups
+noinput
 notv
 ?BROWSER_DISABLE_U2F: nou2f
 shell none

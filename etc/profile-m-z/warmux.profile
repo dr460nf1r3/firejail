@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -35,6 +34,7 @@ caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -49,7 +49,7 @@ disable-mnt
 private-bin warmux
 private-cache
 private-dev
-private-etc ca-certificates,crypto-policies,host.conf,hostname,hosts,machine-id,nsswitch.conf,pki,protocols,resolv.conf,rpc,services,ssl
+private-etc ca-certificates,crypto-policies,host.conf,hostname,hosts,ld.so.preload,machine-id,nsswitch.conf,pki,protocols,resolv.conf,rpc,services,ssl
 private-tmp
 
 dbus-user none

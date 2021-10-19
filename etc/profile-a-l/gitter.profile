@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/.config/Gitter
@@ -26,6 +25,7 @@ machine-id
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -37,7 +37,7 @@ shell none
 
 disable-mnt
 private-bin bash,env,gitter
-private-etc alternatives,ca-certificates,crypto-policies,fonts,pki,pulse,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,fonts,ld.so.preload,pki,pulse,resolv.conf,ssl
 private-opt Gitter
 private-dev
 private-tmp

@@ -13,11 +13,12 @@ include globals.local
 noblacklist ${HOME}/.config/evince
 noblacklist ${DOCUMENTS}
 
+blacklist /usr/libexec
+
 include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -37,6 +38,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -52,9 +54,9 @@ tracelog
 private-bin evince,evince-previewer,evince-thumbnailer
 private-cache
 private-dev
-private-etc alternatives,fonts,group,ld.so.cache,machine-id,passwd
+private-etc alternatives,fonts,group,ld.so.cache,ld.so.preload,machine-id,passwd
 # private-lib might break two-page-view on some systems
-private-lib evince,gcc/*/*/libgcc_s.so.*,gcc/*/*/libstdc++.so.*,gconv,gdk-pixbuf-2.*,gio,gvfs/libgvfscommon.so,libdjvulibre.so.*,libgconf-2.so.*,libgraphite2.so.*,libpoppler-glib.so.*,librsvg-2.so.*,libspectre.so.*
+private-lib evince,gcc/*/*/libgcc_s.so.*,gcc/*/*/libstdc++.so.*,gconv,gdk-pixbuf-2.*,gio,gvfs/libgvfscommon.so,libarchive.so.*,libdjvulibre.so.*,libgconf-2.so.*,libgraphite2.so.*,libpoppler-glib.so.*,librsvg-2.so.*,libspectre.so.*
 private-tmp
 
 # dbus-user filtering might break two-page-view on some systems

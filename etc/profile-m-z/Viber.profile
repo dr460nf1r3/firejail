@@ -12,7 +12,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/.ViberPC
@@ -34,5 +33,5 @@ shell none
 
 disable-mnt
 private-bin awk,bash,dig,sh,Viber
-private-etc alternatives,asound.conf,ca-certificates,crypto-policies,fonts,hosts,localtime,machine-id,mailcap,nsswitch.conf,pki,proxychains.conf,pulse,resolv.conf,ssl,X11
+private-etc alternatives,asound.conf,ca-certificates,crypto-policies,fonts,hosts,ld.so.preload,localtime,machine-id,mailcap,nsswitch.conf,pki,proxychains.conf,pulse,resolv.conf,ssl,X11
 private-tmp

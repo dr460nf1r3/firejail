@@ -99,7 +99,7 @@ static char *resolve_xdg(const char *var) {
 
 	if (asprintf(&fname, "%s/.config/user-dirs.dirs", cfg.homedir) == -1)
 		errExit("asprintf");
-	FILE *fp = fopen(fname, "r");
+	FILE *fp = fopen(fname, "re");
 	if (!fp) {
 		free(fname);
 		return NULL;
@@ -149,6 +149,7 @@ static char *resolve_xdg(const char *var) {
 
 // returns mallocated memory
 static char *resolve_hardcoded(char *entries[]) {
+	EUID_ASSERT();
 	char *fname;
 	struct stat s;
 

@@ -18,7 +18,6 @@ blacklist ${HOME}/.gnupg
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 # Add the next line to your kdiff3.local if you don't need to compare files in disable-programs.inc.
 #include disable-programs.inc
 include disable-shell.inc
@@ -36,6 +35,7 @@ machine-id
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -48,7 +48,7 @@ shell none
 tracelog
 
 disable-mnt
-private-bin  kdiff3
+private-bin kdiff3
 private-cache
 private-dev
 

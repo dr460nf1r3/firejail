@@ -1,25 +1,60 @@
-firejail (0.9.65) baseline; urgency=low
+firejail (0.9.67) baseline; urgency=low
+  * work in progress
+  * exit code: distinguish fatal signals by adding 128
+  * deprecated --disable-whitelist at compile time
+  * deprecated whitelist=yes/no in /etc/firejail/firejail.config
+  * new condition: ALLOW_TRAY
+  * remove (some) environment variables with auth-tokens
+  * new includes: whitelist-run-common.inc, disable-X11.inc
+  * removed includes: disable-passwordmgr.inc
+  * new profiles: microsoft-edge-beta, clion-eap, lifeograph, zim
+  * new profiles: io.github.lainsce.Notejot, rednotebook, gallery-dl
+  * new profiles: yt-dlp, goldendict, goldendict, bundle, cmake
+  * new profiles: make, meson, pip, codium
+ -- netblue30 <netblue30@yahoo.com>  Thu, 29 Jul 2021 09:00:00 -0500
+
+firejail (0.9.66) baseline; urgency=low
+  * deprecated --audit options, relpaced by jailcheck utility
+  * deprecated follow-symlink-as-user from firejail.config
+  * new firejail.config settings: private-bin, private-etc
+  * new firejail.config settings: private-opt, private-srv
+  * new firejail.config settings: whitelist-disable-topdir
+  * new firejail.config settings: seccomp-filter-add
+  * removed kcmp syscall from seccomp default filter
+  * rename --noautopulse to keep-config-pulse
   * filtering environment variables
   * zsh completion
   * command line: --mkdir, --mkfile
   * --protocol now accumulates
   * Jolla/SailfishOS patches
   * private-lib rework
+  * whitelist rework
   * jailtest utility for testing running sandboxes
-  * removed --audit options, relpaced by jailtest
   * capabilities list update
   * faccessat2 syscall support
+  * --private-dev keeps /dev/input
+  * added --noinput to disable /dev/input
+  * add support for subdirs in --private-etc
   * compile time: --enable-force-nonewprivs
   * compile time: --disable-output
   * compile time: --enable-lts
+  * subdirs support in private-etc
+  * input devices support in private-dev, --no-input
+  * support trailing comments on profile lines
   * new profiles: vmware-view, display-im6.q16, ipcalc, ipcalc-ng
   * ebook-convert, ebook-edit, ebook-meta, ebook-polish, lzop,
   * avidemux, calligragemini, vmware-player, vmware-workstation
   * gget, com.github.phase1geo.minder, nextcloud-desktop, pcsxr
   * PPSSPPSDL, openmw, openmw-launcher, jami-gnome, PCSX2, sum
   * bcompare, b2sum, cksum, md5sum, sha1sum, sha224sum, sha256sum
-  * sha384sum, sha512sum, librewold-nightly
- -- netblue30 <netblue30@yahoo.com>  Tue, 9 Feb 2021 09:00:00 -0500
+  * sha384sum, sha512sum, librewold-nightly, Quodlibet, tmux, sway
+  * alienarena, alienarena-wrapper, ballbuster, ballbuster-wrapper,
+  * colorful, colorful-wrapper, gl-117, gl-117-wrapper, glaxium,
+  * glaxium-wrapper, pinball, pinball-wrapper, etr-wrapper, firedragon
+  * neverball-wrapper, neverputt-wrapper, supertuxkart-wrapper, neochat,
+  * cargo, LibreCAD, blobby, funnyboat, pipe-viewer, gtk-pipe-viewer
+  * links2, xlinks2, googler, ddgr, tin
+ -- netblue30 <netblue30@yahoo.com>  Mon, 28 Jun 2021 09:00:00 -0500
 
 firejail (0.9.64.4) baseline; urgency=low
   * disabled overlayfs, pending multiple fixes (CVE-2021-26910)
@@ -27,7 +62,7 @@ firejail (0.9.64.4) baseline; urgency=low
 
 firejail (0.9.64.2) baseline; urgency=low
   * allow --tmpfs inside $HOME for unprivileged users
-  * --disable-usertmpfs  compile time option
+  * --disable-usertmpfs compile time option
   * allow AF_BLUETOOTH via --protocol=bluetooth
   * Setup guide for new users: contrib/firejail-welcome.sh
   * implement netns in profiles
@@ -534,7 +569,7 @@ firejail (0.9.44) baseline; urgency=low
   * feature: disable 3D hardware acceleration (--no3d)
   * feature: x11 xpra, x11 xephyr, x11 block, allusers, no3d profile commands
   * feature: move files in sandbox (--put)
-  * feature: accept wildcard patterns in user  name field of restricted
+  * feature: accept wildcard patterns in user name field of restricted
     shell login feature
   * new profiles: qpdfview, mupdf, Luminance HDR, Synfig Studio, Gimp, Inkscape
   * new profiles: feh, ranger, zathura, 7z, keepass, keepassx,
@@ -576,7 +611,7 @@ firejail (0.9.42) baseline; urgency=low
   * compile time: disable whitelisting (--disable-whitelist)
   * compile time: disable global config (--disable-globalcfg)
   * run time: enable/disable overlayfs (overlayfs yes/no)
-  * run time: enable/disable  quiet as default (quiet-by-default yes/no)
+  * run time: enable/disable quiet as default (quiet-by-default yes/no)
   * run time: user-defined network filter (netfilter-default)
   * run time: enable/disable whitelisting (whitelist yes/no)
   * run time: enable/disable remounting of /proc and /sys
@@ -674,7 +709,7 @@ firejail (0.9.38) baseline; urgency=low
  -- netblue30 <netblue30@yahoo.com>  Tue, 2 Feb 2016 10:00:00 -0500
 
 firejail (0.9.36) baseline; urgency=low
-  * added  unbound, dnscrypt-proxy, BitlBee, HexChat, WeeChat,
+  * added unbound, dnscrypt-proxy, BitlBee, HexChat, WeeChat,
      parole and rtorrent profiles
   * Google Chrome profile rework
   * added google-chrome-stable profile

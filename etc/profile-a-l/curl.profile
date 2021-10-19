@@ -20,7 +20,6 @@ blacklist ${RUNUSER}
 
 include disable-common.inc
 include disable-exec.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 # Depending on workflow you can add 'include disable-xdg.inc' to your curl.local.
 #include disable-xdg.inc
@@ -36,6 +35,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound

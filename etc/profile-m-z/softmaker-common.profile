@@ -6,9 +6,9 @@ include softmaker-common.local
 # added by caller profile
 #include globals.local
 
-# The offical packages install the desktop file under /usr/local/share/applications
-# with an absolute Exec line. These files are NOT handelt by firecfg,
-# therefore you must manualy copy them in you home and remove '/usr/bin/'.
+# The official packages install the desktop file under /usr/local/share/applications
+# with an absolute Exec line. These files are NOT handled by firecfg,
+# therefore you must manually copy them in you home and remove '/usr/bin/'.
 
 noblacklist ${HOME}/SoftMaker
 
@@ -16,7 +16,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 whitelist /usr/share/office2018
@@ -30,6 +29,7 @@ ipc-namespace
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv

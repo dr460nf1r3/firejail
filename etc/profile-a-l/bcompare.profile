@@ -17,7 +17,6 @@ noblacklist ${HOME}/.config/gwenviewrc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 # Add the next line to your bcompare.local if you don't need to compare files in disable-programs.inc.
 #include disable-programs.inc
 #include disable-shell.inc - breaks launch
@@ -29,6 +28,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv

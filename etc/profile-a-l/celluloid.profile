@@ -17,14 +17,14 @@ include allow-lua.inc
 include allow-python2.inc
 include allow-python3.inc
 
+blacklist /usr/libexec
+
 include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
-read-only ${DESKTOP}
 mkdir ${HOME}/.config/celluloid
 mkdir ${HOME}/.config/gnome-mpv
 mkdir ${HOME}/.config/youtube-dl
@@ -41,6 +41,7 @@ apparmor
 caps.drop all
 netfilter
 nogroups
+noinput
 nonewprivs
 noroot
 nou2f
@@ -52,12 +53,13 @@ tracelog
 
 private-bin celluloid,env,gnome-mpv,python*,youtube-dl
 private-cache
-private-etc alternatives,ca-certificates,crypto-policies,dconf,drirc,fonts,gtk-3.0,hosts,ld.so.cache,libva.conf,localtime,machine-id,pkcs11,pki,resolv.conf,selinux,ssl,xdg
+private-etc alternatives,ca-certificates,crypto-policies,dconf,drirc,fonts,gtk-3.0,hosts,ld.so.cache,ld.so.preload,libva.conf,localtime,machine-id,pkcs11,pki,resolv.conf,selinux,ssl,xdg
 private-dev
 private-tmp
 
 dbus-user filter
 dbus-user.own io.github.celluloid_player.Celluloid
+dbus-user.talk ca.desrt.dconf
 dbus-user.talk org.gnome.SettingsDaemon.MediaKeys
 dbus-system none
 

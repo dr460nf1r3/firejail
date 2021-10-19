@@ -15,7 +15,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 
@@ -32,6 +31,7 @@ machine-id
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -47,5 +47,5 @@ disable-mnt
 private-bin xiphos
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,fonts,pki,resolv.conf,ssli,sword,sword.conf
+private-etc alternatives,ca-certificates,crypto-policies,fonts,ld.so.preload,pki,resolv.conf,ssli,sword,sword.conf
 private-tmp

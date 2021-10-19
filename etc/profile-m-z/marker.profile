@@ -20,11 +20,11 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
 
+whitelist /usr/libexec/webkit2gtk-4.0
 whitelist /usr/share/com.github.fabiocolacio.marker
 include whitelist-runuser-common.inc
 include whitelist-usr-share-common.inc
@@ -38,6 +38,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound

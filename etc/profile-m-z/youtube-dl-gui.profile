@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -33,6 +32,7 @@ machine-id
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -49,7 +49,7 @@ disable-mnt
 private-bin atomicparsley,ffmpeg,ffprobe,python*,youtube-dl-gui
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,dconf,fonts,gtk-2.0,gtk-3.0,hostname,hosts,ld.so.cache,locale,locale.conf,passwd,pki,resolv.conf,ssl
+private-etc alternatives,ca-certificates,crypto-policies,dconf,fonts,gtk-2.0,gtk-3.0,hostname,hosts,ld.so.cache,ld.so.preload,locale,locale.conf,passwd,pki,resolv.conf,ssl
 private-tmp
 
 dbus-user none

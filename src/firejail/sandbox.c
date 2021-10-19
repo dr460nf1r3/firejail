@@ -19,6 +19,7 @@
 */
 
 #include "firejail.h"
+#include "../include/gcov_wrapper.h"
 #include "../include/seccomp.h"
 #include <sys/mman.h>
 #include <sys/mount.h>
@@ -49,7 +50,6 @@
 #include <sys/apparmor.h>
 #endif
 
-
 static int force_nonewprivs = 0;
 
 static int monitored_pid = 0;
@@ -67,7 +67,7 @@ static void sandbox_handler(int sig){
 		if (asprintf(&monfile, "/proc/%d/cmdline", monitored_pid) == -1)
 			errExit("asprintf");
 		while (monsec) {
-			FILE *fp = fopen(monfile, "r");
+			FILE *fp = fopen(monfile, "re");
 			if (!fp)
 				break;
 
@@ -87,9 +87,9 @@ static void sandbox_handler(int sig){
 
 	// broadcast a SIGKILL
 	kill(-1, SIGKILL);
-	flush_stdin();
 
-	exit(sig);
+	flush_stdin();
+	exit(128 + sig);
 }
 
 static void install_handler(void) {
@@ -162,7 +162,7 @@ static void save_nogroups(void) {
 	if (arg_nogroups == 0)
 		return;
 
-	FILE *fp = fopen(RUN_GROUPS_CFG, "w");
+	FILE *fp = fopen(RUN_GROUPS_CFG, "wxe");
 	if (fp) {
 		fprintf(fp, "\n");
 		SET_PERMS_STREAM(fp, 0, 0, 0644); // assume mode 0644
@@ -204,7 +204,7 @@ static void save_umask(void) {
 }
 
 static char *create_join_file(void) {
-	int fd = open(RUN_JOIN_FILE, O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, S_IRUSR | S_IWRITE | S_IRGRP | S_IROTH);
+	int fd = open(RUN_JOIN_FILE, O_RDWR|O_CREAT|O_EXCL|O_CLOEXEC, S_IRUSR | S_IWUSR | S_IRGRP | S_IROTH);
 	if (fd == -1)
 		errExit("open");
 	if (ftruncate(fd, 1) == -1)
@@ -227,7 +227,7 @@ static void sandbox_if_up(Bridge *br) {
 	if (br->arg_ip_none == 1);	// do nothing
 	else if (br->arg_ip_none == 0 && br->macvlan == 0) {
 		if (br->ipsandbox == br->ip) {
-			fprintf(stderr, "Error: %d.%d.%d.%d is interface %s address.\n", PRINT_IP(br->ipsandbox), br->dev);
+			fprintf(stderr, "Error: %d.%d.%d.%d is interface %s address, exiting...\n", PRINT_IP(br->ipsandbox), br->dev);
 			exit(1);
 		}
 
@@ -245,13 +245,17 @@ static void sandbox_if_up(Bridge *br) {
 			br->ipsandbox = arp_assign(dev, br); //br->ip, br->mask);
 		else {
 			if (br->ipsandbox == br->ip) {
-				fprintf(stderr, "Error: %d.%d.%d.%d is interface %s address.\n", PRINT_IP(br->ipsandbox), br->dev);
+				fprintf(stderr, "Error: %d.%d.%d.%d is interface %s address, exiting...\n", PRINT_IP(br->ipsandbox), br->dev);
+				exit(1);
+			}
+			if (br->ipsandbox == cfg.defaultgw) {
+				fprintf(stderr, "Error: %d.%d.%d.%d is the default gateway, exiting...\n", PRINT_IP(br->ipsandbox));
 				exit(1);
 			}
 
 			uint32_t rv = arp_check(dev, br->ipsandbox);
 			if (rv) {
-				fprintf(stderr, "Error: the address %d.%d.%d.%d is already in use.\n", PRINT_IP(br->ipsandbox));
+				fprintf(stderr, "Error: the address %d.%d.%d.%d is already in use, exiting...\n", PRINT_IP(br->ipsandbox));
 				exit(1);
 			}
 		}
@@ -500,9 +504,8 @@ void start_application(int no_sandbox, int fd, char *set_sandbox_status) {
 			exit(1);
 		}
 
-#ifdef HAVE_GCOV
 		__gcov_dump();
-#endif
+
 		seccomp_install_filters();
 
 		if (set_sandbox_status)
@@ -556,9 +559,8 @@ void start_application(int no_sandbox, int fd, char *set_sandbox_status) {
 		if (!arg_command && !arg_quiet)
 			print_time();
 
-#ifdef HAVE_GCOV
 		__gcov_dump();
-#endif
+
 		seccomp_install_filters();
 
 		if (set_sandbox_status)
@@ -796,7 +798,7 @@ int sandbox(void* sandbox_arg) {
 
 	// trace pre-install
 	if (need_preload)
-		fs_trace_preload();
+		fs_trace_touch_or_store_preload();
 
 	// store hosts file
 	if (cfg.hosts_file)
@@ -812,8 +814,11 @@ int sandbox(void* sandbox_arg) {
 		//****************************
 		// trace pre-install, this time inside chroot
 		//****************************
-		if (need_preload)
-			fs_trace_preload();
+		if (need_preload) {
+			int rv = unlink(RUN_LDPRELOAD_FILE);
+			(void) rv;
+			fs_trace_touch_or_store_preload();
+		}
 	}
 	else
 #endif
@@ -833,6 +838,7 @@ int sandbox(void* sandbox_arg) {
 	// private mode
 	//****************************
 	if (arg_private) {
+		EUID_USER();
 		if (cfg.home_private) {	// --private=
 			if (cfg.chrootdir)
 				fwarning("private=directory feature is disabled in chroot\n");
@@ -851,6 +857,7 @@ int sandbox(void* sandbox_arg) {
 		}
 		else // --private
 			fs_private();
+		EUID_ROOT();
 	}
 
 	if (arg_private_dev)
@@ -988,7 +995,7 @@ int sandbox(void* sandbox_arg) {
 
 			// create /etc/ld.so.preload file again
 			if (need_preload)
-				fs_trace_preload();
+				fs_trace_touch_preload();
 
 			// openSUSE configuration is split between /etc and /usr/etc
 			// process private-etc a second time
@@ -1000,10 +1007,12 @@ int sandbox(void* sandbox_arg) {
 	// apply the profile file
 	//****************************
 	// apply all whitelist commands ...
+	EUID_USER();
 	fs_whitelist();
 
 	// ... followed by blacklist commands
 	fs_blacklist(); // mkdir and mkfile are processed all over again
+	EUID_ROOT();
 
 	//****************************
 	// nosound/no3d/notv/novideo and fix for pulseaudio 7.0
@@ -1015,7 +1024,7 @@ int sandbox(void* sandbox_arg) {
 		// disable /dev/snd
 		fs_dev_disable_sound();
 	}
-	else if (!arg_noautopulse)
+	else if (!arg_keep_config_pulse)
 		pulseaudio_init();
 
 	if (arg_no3d)
@@ -1033,10 +1042,13 @@ int sandbox(void* sandbox_arg) {
 	if (arg_novideo)
 		fs_dev_disable_video();
 
+	if (arg_noinput)
+		fs_dev_disable_input();
+
 	//****************************
 	// set dns
 	//****************************
-	fs_resolvconf();
+	fs_rebuild_etc();
 
 	//****************************
 	// start dhcp client
@@ -1236,7 +1248,6 @@ int sandbox(void* sandbox_arg) {
 
 	if (app_pid == 0) {
 #ifdef HAVE_APPARMOR
-		// add apparmor confinement after the execve
 		set_apparmor();
 #endif
 
@@ -1251,13 +1262,17 @@ int sandbox(void* sandbox_arg) {
 	munmap(set_sandbox_status, 1);
 
 	int status = monitor_application(app_pid);	// monitor application
-	flush_stdin();
 
 	if (WIFEXITED(status)) {
 		// if we had a proper exit, return that exit status
-		return WEXITSTATUS(status);
+		status = WEXITSTATUS(status);
+	} else if (WIFSIGNALED(status)) {
+		// distinguish fatal signals by adding 128
+		status = 128 + WTERMSIG(status);
 	} else {
-		// something else went wrong!
-		return -1;
+		status = -1;
 	}
+
+	flush_stdin();
+	return status;
 }

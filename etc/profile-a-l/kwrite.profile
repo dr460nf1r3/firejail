@@ -20,7 +20,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -33,6 +32,7 @@ caps.drop all
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 # nosound - KWrite is using ALSA!
@@ -46,7 +46,7 @@ tracelog
 
 private-bin kbuildsycoca4,kdeinit4,kwrite
 private-dev
-private-etc alternatives,fonts,kde4rc,kde5rc,ld.so.cache,machine-id,pulse,xdg
+private-etc alternatives,fonts,kde4rc,kde5rc,ld.so.cache,ld.so.preload,machine-id,pulse,xdg
 private-tmp
 
 # dbus-user none

@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -33,6 +32,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -48,7 +48,7 @@ tracelog
 disable-mnt
 private-bin bash,convert,ffmpeg,firejail,fish,peek,sh,which,zsh
 private-dev
-private-etc dconf,firejail,fonts,gtk-3.0,login.defs,pango,passwd,X11
+private-etc dconf,firejail,fonts,gtk-3.0,ld.so.preload,login.defs,pango,passwd,X11
 private-tmp
 
 dbus-user filter

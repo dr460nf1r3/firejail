@@ -18,7 +18,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -37,6 +36,7 @@ netfilter
 machine-id
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -52,7 +52,7 @@ tracelog
 disable-mnt
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,fonts,machine-id,pki,QGIS,QGIS.conf,resolv.conf,ssl,Trolltech.conf
+private-etc alternatives,ca-certificates,crypto-policies,fonts,ld.so.preload,machine-id,pki,QGIS,QGIS.conf,resolv.conf,ssl,Trolltech.conf
 private-tmp
 
 dbus-user none

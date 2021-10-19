@@ -20,7 +20,6 @@
 #include "firejail.h"
 #include <sys/mount.h>
 #include <sys/stat.h>
-#include <linux/limits.h>
 #include <glob.h>
 #include <dirent.h>
 #include <fcntl.h>
@@ -127,17 +126,17 @@ void fs_var_log(void) {
 
 		// create an empty /var/log/wtmp file
 		/* coverity[toctou] */
-		FILE *fp = fopen("/var/log/wtmp", "w");
+		FILE *fp = fopen("/var/log/wtmp", "wxe");
 		if (fp) {
-			SET_PERMS_STREAM(fp, 0, wtmp_group, S_IRUSR | S_IWRITE | S_IRGRP | S_IWGRP | S_IROTH);
+			SET_PERMS_STREAM(fp, 0, wtmp_group, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
 			fclose(fp);
 		}
 		fs_logger("touch /var/log/wtmp");
 
 		// create an empty /var/log/btmp file
-		fp = fopen("/var/log/btmp", "w");
+		fp = fopen("/var/log/btmp", "wxe");
 		if (fp) {
-			SET_PERMS_STREAM(fp, 0, wtmp_group, S_IRUSR | S_IWRITE | S_IRGRP | S_IWGRP);
+			SET_PERMS_STREAM(fp, 0, wtmp_group, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP);
 			fclose(fp);
 		}
 		fs_logger("touch /var/log/btmp");
@@ -158,8 +157,7 @@ void fs_var_lib(void) {
 		fs_logger("tmpfs /var/lib/dhcp");
 
 		// isc dhcp server requires a /var/lib/dhcp/dhcpd.leases file
-		FILE *fp = fopen("/var/lib/dhcp/dhcpd.leases", "w");
-
+		FILE *fp = fopen("/var/lib/dhcp/dhcpd.leases", "wxe");
 		if (fp) {
 			fprintf(fp, "\n");
 			SET_PERMS_STREAM(fp, 0, 0, S_IRUSR|S_IWUSR|S_IRGRP|S_IROTH);
@@ -287,7 +285,7 @@ void fs_var_utmp(void) {
 	if (stat(UTMP_FILE, &s) == 0)
 		utmp_group = s.st_gid;
 	else {
-		fwarning("cannot find /var/run/utmp\n");
+		fwarning("cannot find %s\n", UTMP_FILE);
 		return;
 	}
 
@@ -296,7 +294,7 @@ void fs_var_utmp(void) {
 		printf("Create the new utmp file\n");
 
 	/* coverity[toctou] */
-	FILE *fp = fopen(RUN_UTMP_FILE, "w");
+	FILE *fp = fopen(RUN_UTMP_FILE, "we");
 	if (!fp)
 		errExit("fopen");
 
@@ -315,7 +313,7 @@ void fs_var_utmp(void) {
 	// save new utmp file
 	int rv = fwrite(&u_boot, sizeof(u_boot), 1, fp);
 	(void) rv;
-	SET_PERMS_STREAM(fp, 0, utmp_group, S_IRUSR | S_IWRITE | S_IRGRP | S_IWGRP | S_IROTH);
+	SET_PERMS_STREAM(fp, 0, utmp_group, S_IRUSR | S_IWUSR | S_IRGRP | S_IWGRP | S_IROTH);
 	fclose(fp);
 
 	// mount the new utmp file
@@ -323,5 +321,9 @@ void fs_var_utmp(void) {
 		printf("Mount the new utmp file\n");
 	if (mount(RUN_UTMP_FILE, UTMP_FILE, NULL, MS_BIND|MS_NOSUID|MS_NOEXEC | MS_NODEV | MS_REC, NULL) < 0)
 		errExit("mount bind utmp");
-	fs_logger("create /var/run/utmp");
+	fs_logger2("create", UTMP_FILE);
+
+	// blacklist RUN_UTMP_FILE
+	if (mount(RUN_RO_FILE, RUN_UTMP_FILE, NULL, MS_BIND, "mode=400,gid=0") < 0)
+		errExit("mount bind");
 }

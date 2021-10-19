@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -28,6 +27,7 @@ ipc-namespace
 netfilter
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -42,7 +42,7 @@ shell none
 private-bin sqlitebrowser
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,fonts,group,machine-id,passwd,pki,ssl
+private-etc alternatives,ca-certificates,crypto-policies,fonts,group,ld.so.preload,machine-id,passwd,pki,ssl
 private-tmp
 
 # breaks proxy creation

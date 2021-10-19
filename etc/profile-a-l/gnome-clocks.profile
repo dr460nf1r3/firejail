@@ -10,7 +10,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -28,6 +27,7 @@ netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -42,6 +42,6 @@ disable-mnt
 private-bin gnome-clocks,gsound-play
 private-cache
 private-dev
-private-etc alternatives,ca-certificates,crypto-policies,dconf,fonts,gtk-3.0,hosts,localtime,machine-id,pkcs11,pki,ssl
+private-etc alternatives,ca-certificates,crypto-policies,dconf,fonts,gtk-3.0,hosts,ld.so.preload,localtime,machine-id,pkcs11,pki,ssl
 private-tmp
 

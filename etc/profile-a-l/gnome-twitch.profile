@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/.cache/gnome-twitch
@@ -25,6 +24,7 @@ include whitelist-common.inc
 caps.drop all
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv

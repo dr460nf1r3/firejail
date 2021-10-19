@@ -36,8 +36,10 @@ void shut(pid_t pid) {
 		}
 		free(comm);
 	}
-	else
-		errExit("/proc/PID/comm");
+	else {
+		fprintf(stderr, "Error: cannot find process %d\n", pid);
+		exit(1);
+	}
 
 	// check privileges for non-root users
 	uid_t uid = getuid();
@@ -64,7 +66,7 @@ void shut(pid_t pid) {
 		monsec--;
 
 		EUID_ROOT();
-		FILE *fp = fopen(monfile, "r");
+		FILE *fp = fopen(monfile, "re");
 		EUID_USER();
 		if (!fp) {
 			killdone = 1;

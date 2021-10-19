@@ -6,6 +6,9 @@ include seahorse-adventures.local
 # Persistent global definitions
 include globals.local
 
+# Allow /bin/sh (blacklisted by disable-shell.inc)
+include allow-bin-sh.inc
+
 # Allow python (blacklisted by disable-interpreters.inc)
 include allow-python2.inc
 include allow-python3.inc
@@ -14,12 +17,12 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
 
 whitelist /usr/share/seahorse-adventures
+whitelist /usr/share/games/seahorse-adventures
 include whitelist-common.inc
 include whitelist-usr-share-common.inc
 include whitelist-var-common.inc
@@ -29,6 +32,7 @@ caps.drop all
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -41,10 +45,10 @@ tracelog
 
 disable-mnt
 private
-private-bin python*,seahorse-adventures
+private-bin bash,dash,python*,seahorse-adventures,sh
 private-cache
 private-dev
-private-etc machine-id
+private-etc ld.so.preload,machine-id
 private-tmp
 
 dbus-user none

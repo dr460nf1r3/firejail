@@ -14,7 +14,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-xdg.inc
 
@@ -28,6 +27,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -44,7 +44,7 @@ disable-mnt
 private-bin flacsplt,mp3splt,mp3wrap,oggsplt
 private-cache
 private-dev
-private-etc alternatives
+private-etc alternatives,ld.so.preload
 private-tmp
 
 memory-deny-write-execute

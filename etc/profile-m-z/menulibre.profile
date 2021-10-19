@@ -15,7 +15,6 @@ include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
 include disable-programs.inc
-include disable-passwdmgr.inc
 include disable-xdg.inc
 
 # Whitelist your system icon directory,varies by distro
@@ -37,6 +36,7 @@ net none
 nodvd
 no3d
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -52,7 +52,7 @@ tracelog
 disable-mnt
 private-cache
 private-dev
-private-etc alternatives,dconf,fonts,gtk-3.0,locale.alias,locale.conf,mime.types,nsswitch.conf,passwd,pki,selinux,X11,xdg
+private-etc alternatives,dconf,fonts,gtk-3.0,ld.so.preload,locale.alias,locale.conf,mime.types,nsswitch.conf,passwd,pki,selinux,X11,xdg
 private-tmp
 
 dbus-user none

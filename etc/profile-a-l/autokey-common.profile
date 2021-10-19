@@ -19,7 +19,6 @@ include disable-devel.inc
 # disable-exec.inc might break scripting functionality
 #include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include whitelist-var-common.inc
 
@@ -27,6 +26,7 @@ caps.drop all
 netfilter
 no3d
 nogroups
+noinput
 nonewprivs
 noroot
 nou2f

@@ -8,11 +8,12 @@ include globals.local
 
 noblacklist ${HOME}/.etr
 
+blacklist /usr/libexec
+
 include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -20,6 +21,8 @@ include disable-xdg.inc
 mkdir ${HOME}/.etr
 whitelist ${HOME}/.etr
 whitelist /usr/share/etr
+# Debian version
+whitelist /usr/share/games/etr
 include whitelist-common.inc
 include whitelist-runuser-common.inc
 include whitelist-usr-share-common.inc
@@ -30,6 +33,7 @@ caps.drop all
 net none
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 notv
@@ -37,6 +41,7 @@ nou2f
 novideo
 protocol unix,netlink
 seccomp
+seccomp.block-secondary
 shell none
 tracelog
 
@@ -44,7 +49,7 @@ disable-mnt
 private-bin etr
 private-cache
 private-dev
-# private-etc alternatives,drirc,machine-id,openal
+# private-etc alternatives,drirc,machine-id,openal,passwd
 private-tmp
 
 dbus-user none

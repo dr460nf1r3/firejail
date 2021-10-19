@@ -11,7 +11,6 @@ noblacklist ${MUSIC}
 include disable-common.inc
 include disable-devel.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -19,6 +18,7 @@ include disable-xdg.inc
 caps.drop all
 netfilter
 no3d
+noinput
 nonewprivs
 noroot
 notv

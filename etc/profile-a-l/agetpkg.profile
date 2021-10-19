@@ -18,7 +18,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -32,11 +31,11 @@ caps.drop all
 hostname agetpkg
 ipc-namespace
 machine-id
-noautopulse
 netfilter
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -51,7 +50,7 @@ tracelog
 private-bin agetpkg,python3
 private-cache
 private-dev
-private-etc ca-certificates,crypto-policies,pki,resolv.conf,ssl
+private-etc ca-certificates,crypto-policies,ld.so.preload,pki,resolv.conf,ssl
 private-tmp
 
 dbus-user none

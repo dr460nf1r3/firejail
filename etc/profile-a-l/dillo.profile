@@ -11,7 +11,6 @@ noblacklist ${HOME}/.dillo
 include disable-common.inc
 include disable-devel.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 
 mkdir ${HOME}/.dillo
@@ -25,6 +24,7 @@ include whitelist-var-common.inc
 caps.drop all
 netfilter
 nodvd
+noinput
 nonewprivs
 noroot
 notv

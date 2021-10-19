@@ -13,7 +13,6 @@ include disable-common.inc
 include disable-devel.inc
 include disable-exec.inc
 include disable-interpreters.inc
-include disable-passwdmgr.inc
 include disable-programs.inc
 include disable-shell.inc
 include disable-xdg.inc
@@ -22,6 +21,7 @@ mkdir ${HOME}/.config/gnote
 mkdir ${HOME}/.local/share/gnote
 whitelist ${HOME}/.config/gnote
 whitelist ${HOME}/.local/share/gnote
+whitelist /usr/libexec/webkit2gtk-4.0
 whitelist /usr/share/gnote
 include whitelist-common.inc
 include whitelist-runuser-common.inc
@@ -35,6 +35,7 @@ net none
 no3d
 nodvd
 nogroups
+noinput
 nonewprivs
 noroot
 nosound
@@ -50,7 +51,7 @@ disable-mnt
 private-bin gnote
 private-cache
 private-dev
-private-etc dconf,fonts,gtk-3.0,pango,X11
+private-etc dconf,fonts,gtk-3.0,ld.so.preload,pango,X11
 private-tmp
 
 dbus-user filter

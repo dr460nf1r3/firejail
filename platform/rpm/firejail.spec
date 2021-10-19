@@ -35,7 +35,7 @@ rm -rf %{buildroot}
 %attr(4755, -, -) %{_bindir}/__NAME__
 %{_bindir}/firecfg
 %{_bindir}/firemon
-%{_bindir}/jailtest
+%{_bindir}/jailcheck
 %{_libdir}/__NAME__
 %{_datarootdir}/bash-completion/completions/__NAME__
 %{_datarootdir}/bash-completion/completions/firecfg
@@ -45,8 +45,8 @@ rm -rf %{buildroot}
 %{_mandir}/man1/__NAME__.1.gz
 %{_mandir}/man1/firecfg.1.gz
 %{_mandir}/man1/firemon.1.gz
+%{_mandir}/man1/jailcheck.1.gz
 %{_mandir}/man5/__NAME__-login.5.gz
 %{_mandir}/man5/__NAME__-profile.5.gz
 %{_mandir}/man5/__NAME__-users.5.gz
-%{_mandir}/man5/jailtest.5.gz
 %config(noreplace) %{_sysconfdir}/__NAME__
